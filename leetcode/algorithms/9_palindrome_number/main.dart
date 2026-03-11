@@ -1,6 +1,13 @@
 class PalindromeNumber {
+  /**
+   * Complexities:
+   *   - Time Complexity: O(logᴺ)
+   *   - Space Complexity: O(1)
+   */
   bool isPalindrome(int x) {
-    if (x < 0) return false;
+    if (x < 0) {
+      return false;
+    }
 
     final List<String> xList = x.toString().split("");
     for (var i = 0; i < xList.length / 2; i++) {
@@ -10,19 +17,55 @@ class PalindromeNumber {
     return true;
   }
 
-  // Best Solution
-  bool bestSolution(int x) {
-    int reverse = 0;
-    int copy = x;
 
-    // The loop break when the copy of original number becomes zero
-    // Also negative number cannot be a palindrome
-    while (copy > 0) {
-      final digit = copy % 10;
-      reverse = reverse * 10 + digit;
-      copy = copy ~/ 10;
+  // Solution
+  /**
+   * Solution 1
+   * 
+   * Mathematical Reversion
+   * 
+   * Complexities:
+   *   - Time Complexity: O(logᴺ)
+   *   - Space Complexity: O(1)
+   */
+  bool solution1(int x) {
+    if (x < 0 || (x % 10 == 0 && x != 0)) {
+      return false;
     }
 
-    return reverse == x;
+    int original = x;
+    int reversed = 0;
+
+    while (x > 0) {
+      int digit = x % 10;
+      reversed = reversed * 10 + digit;
+      x = x ~/ 10;
+    }
+
+    return original == reversed;
+  }
+
+  /**
+   * Solution 2
+   * 
+   * Revert Half of the Number
+   * 
+   * Complexities:
+   *   - Time Complexity: O(logᴺ)
+   *   - Space Complexity: O(1)
+   */
+  bool solution2(int x) {
+    if (x < 0 || (x % 10 == 0 && x != 0)) {
+      return false;
+    }
+
+    int reversed = 0;
+
+    while (x > reversed) {
+      reversed = reversed * 10 + x % 10;
+      x = x ~/ 10;
+    }
+
+    return x == reversed || x == reversed ~/ 10;
   }
 }
