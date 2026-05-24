@@ -1,69 +1,70 @@
 class TwoSum {
-  List<int> twoSum(List<int> nums, int target) {
-    for (int i = 0; i < nums.length - 1; i++) {
+  /**
+   * Brute-Force
+   *
+   * Complexities:
+   *   N - Size of `nums`
+   *   - Time Complexity: O(N²)
+   *   - Space Complexity: O(1)
+   */
+  List<int> twoSum1(List<int> nums, int target) {
+    for (int i = 0; i < nums.length; i++) {
       for (int j = i + 1; j < nums.length; j++) {
         if (nums[i] + nums[j] == target) {
           return [i, j];
         }
       }
     }
+
     return [];
   }
-}
 
-// Best Solution
-// Best Solution 1: Brute Force
-class BestSolution1 {
-  List<int> twoSum(List<int> nums, int target) {
-    int n = nums.length;
-    for (int i = 0; i < n - 1; i++) {
-      for (int j = i + 1; j < n; j++) {
-        if (nums[i] + nums[j] == target) {
-          return [i, j];
-        }
-      }
-    }
-    return []; // No solution found
-  }
-}
+  /**
+   * Hash Map
+   *
+   * Complexities:
+   *   N - Size of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  List<int> twoSum2(List<int> nums, int target) {
+    Map<int, int> map = Map<int, int>();
 
-// Best Solution 2: Two-pass Hash Table
-class BestSolution2 {
-  List<int> twoSum(List<int> nums, int target) {
-    Map<int, int> numMap = Map<int, int>();
-    int n = nums.length;
-
-    // Build the hash table
-    for (int i = 0; i < n; i++) {
-      numMap[nums[i]] = i;
-    }
-
-    // Find the complement
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < nums.length; i++) {
       int complement = target - nums[i];
-      if (numMap.containsKey(complement) && numMap[complement] != i) {
-        return [i, numMap[complement]!];
+      if (map.containsKey(complement)) {
+        return [i, map[complement]!];
       }
+      map[nums[i]] = i;
     }
 
-    return []; // No solution found
+    return [];
   }
-}
 
-// Best Solution 3: One-pass Hash Table
-class BestSolution3 {
-  List<int> twoSum(List<int> nums, int target) {
-    Map<int, int> numMap = Map<int, int>();
-    int n = nums.length;
 
-    for (int i = 0; i < n; i++) {
-      int complement = target - nums[i];
-      if (numMap.containsKey(complement)) {
-        return <int>[numMap[complement]!, i];
+  // Solution
+  /**
+   * Hash Map
+   *
+   * Complexities:
+   *   N - Size of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  List<int> solution(List<int> nums, int target) {
+    Map<int, int> seen = {};
+
+    for (int i = 0; i < nums.length; i++) {
+      int currentNum = nums[i];
+      int complement = target - currentNum;
+
+      if (seen.containsKey(complement)) {
+        return [seen[complement]!, i];
       }
-      numMap[nums[i]] = i;
+
+      seen[currentNum] = i;
     }
 
-    return <int>[]; // No solution found
+    return [];
   }
 }
