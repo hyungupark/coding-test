@@ -1,39 +1,33 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 
-bool isValid(char *s)
-{
+/**
+ * LIFO (Last-In, First-Out): Stack
+ * 
+ * Complexities:
+ *   N - Length of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+bool isValid(char* s) {
     char stack[strlen(s)];
-    int count = 0;
-    for (int i = 0; i < strlen(s); i++)
-    {
-        if (s[i] == '(')
-        {
-            stack[count] = ')';
-            count++;
-        }
-        else if (s[i] == '[')
-        {
-            stack[count] = ']';
-            count++;
-        }
-        else if (s[i] == '{')
-        {
-            stack[count] = '}';
-            count++;
-        }
-        else if (s[i] == '\0')
-        {
+    int top = -1;
+
+    for (int i = 0; i < strlen(s); i++) {
+        if (s[i] == '(') {
+            stack[++top] = ')';
+        } else if (s[i] == '[') {
+            stack[++top] = ']';
+        } else if (s[i] == '{') {
+            stack[++top] = '}';
+        } else if (s[i] == '\0') {
             break;
-        }
-        else
-        {
-            count--;
-            if (count < 0 || stack[count] != s[i])
-            {
+        } else {
+            if (top == -1 || stack[top] != s[i]) {
                 return false;
             }
-            stack[count] = '\0';
+            stack[top--] = '\0';
         }
     }
 
@@ -41,63 +35,55 @@ bool isValid(char *s)
 }
 
 
-// Best Solution
-// Best Solution 1:
-bool bestSolution1(char *s)
-{
-    char *q = s;
-
-    for (char *p = s; *p; p++)
-        switch (*p)
-        {
-        case '(':
-            *q++ = ')';
-            continue;
-        case '{':
-            *q++ = '}';
-            continue;
-        case '[':
-            *q++ = ']';
-            continue;
-        default:
-            if (q == s || *p != *--q)
-            {
-                return false;
-            }
-        }
-
-    return q == s;
-}
-
-// Best Solution 2: Stack
-bool bestSolution2(char *s)
-{
+// Solution
+/**
+ * LIFO (Last-In, First-Out): Stack
+ * 
+ * Complexities:
+ *   N - Length of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+bool solution(char* s) {
     int len = strlen(s);
-    char stack[len];
+
+    if (len % 2 != 0) {
+        return false;
+    }
+
+    char* stack = (char*)malloc(sizeof(char) * len);
     int top = -1;
-    for (int i = 0; i < len; i++)
-    {
-        if (s[i] == '(' || s[i] == '{' || s[i] == '[')
-        {
-            stack[++top] = s[i];
-        }
-        else
-        {
-            if (top == -1)
-            {
+
+    for (int i = 0; i < len; i++) {
+        char current = s[i];
+
+        if (current == '(' || current == '{' || current == '[') {
+            stack[++top] = current;
+        } else {
+            if (top == -1) {
+                free(stack);
                 return false;
             }
-            if ((s[i] == ')' && stack[top] == '(') ||
-                (s[i] == '}' && stack[top] == '{') ||
-                (s[i] == ']' && stack[top] == '['))
-            {
-                top--;
+
+            char open = stack[top--];
+
+            if (current == ')' && open != '(') {
+                free(stack);
+                return false;
             }
-            else
-            {
+            if (current == '}' && open != '{') {
+                free(stack);
+                return false;
+            }
+            if (current == ']' && open != '[') {
+                free(stack);
                 return false;
             }
         }
     }
-    return top == -1;
+
+    bool result = (top == -1);
+
+    free(stack);
+    return result;
 }
