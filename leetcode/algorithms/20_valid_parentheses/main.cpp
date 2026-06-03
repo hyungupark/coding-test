@@ -1,66 +1,72 @@
-#include <string>
-using namespace std;
 #include <stack>
+#include <string>
+#include <unordered_map>
+using namespace std;
 
-class ValidParentheses
-{
+class ValidParentheses {
 public:
-    bool isValid(string s)
-    {
-        char stack[s.length()];
-        int index = -1;
+    /**
+     * LIFO (Last-In, First-Out): Stack
+     * 
+     * Complexities:
+     *   N - Length of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    bool isValid(string s) {
+        stack<char> char_stack;
 
-        for (size_t i = 0; i < s.length(); i++)
-        {
-            if (s.at(i) == '(')
-            {
-                stack[++index] = ')';
-            }
-            else if (s.at(i) == '[')
-            {
-                stack[++index] = ']';
-            }
-            else if (s.at(i) == '{')
-            {
-                stack[++index] = '}';
-            }
-            else
-            {
-                if (index < 0 || stack[index] != s.at(i))
-                {
-                    return false;
-                }
-                index--;
+        for (char c : s) {
+            switch (c) {
+                case '(':
+                    char_stack.push(')');
+                    break;
+                case '[':
+                    char_stack.push(']');
+                    break;
+                case '{':
+                    char_stack.push('}');
+                    break;
+                default:
+                    if (char_stack.empty() || char_stack.top() != c) {
+                        return false;
+                    }
+                    char_stack.pop();
+                    break;
             }
         }
 
-        return index < 0;
+        return char_stack.empty();
     }
 
 
-    // Best Solution
-    bool bestSolution(string s)
-    {
-        stack<char> st; // create an empty stack to store opening brackets
-        for (char c : s)
-        { // loop through each character in the string
-            if (c == '(' || c == '{' || c == '[')
-            {               // if the character is an opening bracket
-                st.push(c); // push it onto the stack
-            }
-            else
-            {                                        // if the character is a closing bracket
-                if (st.empty() ||                    // if the stack is empty or
-                    (c == ')' && st.top() != '(') || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
-                    (c == '}' && st.top() != '{') ||
-                    (c == ']' && st.top() != '['))
-                {
-                    return false; // the string is not valid, so return false
+    // Solution
+    /**
+     * LIFO (Last-In, First-Out): Stack
+     * 
+     * Complexities:
+     *   N - Length of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    bool solution(string s) {
+        stack<char> st;
+
+        for (char c : s) {
+            if (c == '(') {
+                st.push(')');
+            } else if (c == '{') {
+                st.push('}');
+            } else if (c == '[') {
+                st.push(']');
+            } else {
+                if (st.empty() || st.top() != c) {
+                    return false;
                 }
-                st.pop(); // otherwise, pop the opening bracket from the stack
+                st.pop();
             }
         }
-        return st.empty(); // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
-                           // so the string is valid, otherwise, there are unmatched opening brackets, so return false
+
+        return st.empty();
     }
 };
