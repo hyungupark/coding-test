@@ -1,55 +1,63 @@
-import java.util.HashMap;
 import java.util.Stack;
 
 class ValidParentheses {
+  /**
+   * LIFO (Last-In, First-Out): Stack
+   * 
+   * Complexities:
+   *   N - Length of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
   public boolean isValid(String s) {
-    Stack<String> stack = new Stack<String>();
+    Stack<String> stack = new Stack<>();
 
     for (String c : s.split("")) {
-      if (c.equals("(")) {
-        stack.push(")");
-      } else if (c.equals("[")) {
-        stack.push("]");
-      } else if (c.equals("{")) {
-        stack.push("}");
-      } else {
-        if (stack.size() == 0 || !stack.pop().equals(c)) {
-          return false;
+      switch (c) {
+        case "(" -> stack.push(")");
+        case "[" -> stack.push("]");
+        case "{" -> stack.push("}");
+        default -> {
+          if (stack.empty() || !stack.pop().equals(c)) {
+            return false;
+          }
         }
       }
     }
 
-    return stack.size() <= 0;
+    return stack.empty();
   }
 
 
-  // Best Solution
-  public boolean bestSolution(String s) {
-    // Create hashmap to store the pairs...
-    HashMap<Character, Character> Hmap = new HashMap<Character, Character>();
-    Hmap.put(')', '(');
-    Hmap.put('}', '{');
-    Hmap.put(']', '[');
-    // Create stack data structure...
-    Stack<Character> stack = new Stack<Character>();
-    // Traverse each charater in input string...
-    for (int idx = 0; idx < s.length(); idx++) {
-      // If open parentheses are present, push it to stack...
-      if (s.charAt(idx) == '(' || s.charAt(idx) == '{' || s.charAt(idx) == '[') {
-        stack.push(s.charAt(idx));
-        continue;
-      }
-      // If the character is closing parentheses, check that the same type opening
-      // parentheses is being pushed to the stack or not...
-      // If not, we need to return false...
-      if (stack.size() == 0 || Hmap.get(s.charAt(idx)) != stack.pop()) {
-        return false;
+  // Solution
+  /**
+   * LIFO (Last-In, First-Out): Stack
+   * 
+   * Complexities:
+   *   N - Length of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public boolean solution(String s) {
+    if (s.length() % 2 != 0) {
+      return false;
+    }
+
+    Stack<Character> stack = new Stack<>();
+
+    for (char c : s.toCharArray()) {
+      switch (c) {
+        case '(' -> stack.push(')');
+        case '{' -> stack.push('}');
+        case '[' -> stack.push(']');
+        default -> {
+          if (stack.isEmpty() || stack.pop() != c) {
+            return false;
+          }
+        }
       }
     }
-    // If the stack is empty, return true...
-    if (stack.size() == 0) {
-      return true;
-    }
-    return false;
+
+    return stack.isEmpty();
   }
 }
