@@ -1,130 +1,103 @@
-#include <stdio.h>
+#include <stddef.h>
 
-struct ListNode
-{
+struct ListNode {
     int val;
-    struct ListNode *next;
+    struct ListNode* next;
 };
 
-struct ListNode *mergeTwoLists(struct ListNode *list1, struct ListNode *list2)
-{
-    struct ListNode result;
-    struct ListNode *currentNode = &result;
+/**
+ * Iterative + Dummy Node
+ * 
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+    struct ListNode dummy;
+    struct ListNode* curr_head = &dummy;
 
-    if (list1 == NULL && list2 == NULL)
-    {
-        return NULL;
-    }
-
-    while (list1 != NULL || list2 != NULL)
-    {
-        if (list1 != NULL && list2 != NULL)
-        {
-            if (list1->val > list2->val)
-            {
-                currentNode->next = list2;
-                list2 = list2->next;
-            }
-            else
-            {
-                currentNode->next = list1;
-                list1 = list1->next;
-            }
-        }
-        else if (list1 != NULL)
-        {
-            currentNode->next = list1;
+    while (list1 && list2) {
+        if (list1->val > list2->val) {
+            curr_head->next = list2;
+            list2 = list2->next;
+        } else {
+            curr_head->next = list1;
             list1 = list1->next;
         }
-        else
-        {
-            currentNode->next = list2;
-            list2 = list2->next;
-        }
-        currentNode = currentNode->next;
+        curr_head = curr_head->next;
     }
 
-    return result.next;
+    curr_head->next = list1 ? list1 : list2;
+
+    return dummy.next;
 }
 
 
-// Best Solution
-// Best Solution 1:
-struct ListNode *bestSolution1(struct ListNode *list1, struct ListNode *list2)
-{
-    struct ListNode head;
-    struct ListNode *h = &head;
+// Solution
+/**
+ * Solution 1
+ * 
+ * Iterative + Dummy Node
+ * 
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* solution1(struct ListNode* list1, struct ListNode* list2) {
+    struct ListNode dummy;
+    dummy.next = NULL;
 
-    if (list1 == NULL && list2 == NULL)
-    {
-        return NULL;
-    }
+    struct ListNode* tail = &dummy;
 
-    while (list1 && list2)
-    {
-        if (list1->val < list2->val)
-        {
-            h->next = list1;
+    while (list1 != NULL && list2 != NULL) {
+        if (list1->val <= list2->val) {
+            tail->next = list1;
             list1 = list1->next;
-            h = h->next;
-        }
-        else
-        {
-            h->next = list2;
+        } else {
+            tail->next = list2;
             list2 = list2->next;
-            h = h->next;
         }
+
+        tail = tail->next;
     }
 
-    if (list1)
-    {
-        h->next = list1;
-    }
-    if (list2)
-    {
-        h->next = list2;
+    if (list1 != NULL) {
+        tail->next = list1;
+    } else {
+        tail->next = list2;
     }
 
-    return head.next;
+    return dummy.next;
 }
 
-// Best Solution 2:
-struct ListNode *bestSolution2(struct ListNode *list1, struct ListNode *list2)
-{
-    if (!list1)
-    {
+/**
+ * Solution 2
+ * 
+ * Recursive
+ * 
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(N + M)
+ */
+struct ListNode* solution2(struct ListNode* list1, struct ListNode* list2) {
+    if (!list1) {
         return list2;
     }
-    if (!list2)
-    {
+    if (!list2) {
         return list1;
     }
-    struct ListNode *head = list1->val <= list2->val ? list1 : list2;
-    head->next = list1->val <= list2->val ? mergeTwoLists(list1->next, list2) : mergeTwoLists(list1, list2->next);
-    return head;
-}
 
-// Best Solution 3:
-struct ListNode *bestSolution3(struct ListNode *list1, struct ListNode *list2)
-{
-    struct ListNode *res = NULL;
-    if (list1 == NULL)
-    {
+    if (list1->val <= list2->val) {
+        list1->next = solution2(list1->next, list2);
+        return list1;
+    } else {
+        list2->next = solution2(list1, list2->next);
         return list2;
     }
-    else if (list2 == NULL)
-    {
-        return list1;
-    }
-    if (list1->val <= list2->val)
-    {
-        res = list1;
-        res->next = mergeTwoLists(list1->next, list2);
-    }
-    else
-    {
-        res = list2;
-        res->next = mergeTwoLists(list1, list2->next);
-    }
-    return res;
 }
