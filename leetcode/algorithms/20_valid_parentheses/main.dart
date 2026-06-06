@@ -1,4 +1,12 @@
 class ValidParentheses {
+  /**
+   * LIFO (Last-In, First-Out): Stack
+   * 
+   * Complexities:
+   *   N - Length of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
   bool isValid(String s) {
     List<String> stack = <String>[];
 
@@ -14,31 +22,56 @@ class ValidParentheses {
           stack.add("}");
           break;
         default:
-          if (stack.length == 0 || !(stack.removeLast() == c)) {
+          if (stack.isEmpty || stack.removeLast() != c) {
             return false;
           }
       }
     }
 
-    return stack.length <= 0;
+    return stack.isEmpty;
   }
 
-  // Best Solution
-  bool bestSolution(String s) {
-    String d1 = "()";
-    String d2 = "{}";
-    String d3 = "[]";
-    while (s.isNotEmpty) {
-      if (s.contains(d1)) {
-        s = s.replaceAll(d1, '');
-      } else if (s.contains(d2)) {
-        s = s.replaceAll(d2, '');
-      } else if (s.contains(d3)) {
-        s = s.replaceAll(d3, '');
+
+  // Solution
+  /**
+   * LIFO (Last-In, First-Out): Stack
+   * 
+   * Complexities:
+   *   N - Length of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  bool solution(String s) {
+    if (s.length % 2 != 0) {
+      return false;
+    }
+
+    final Map<String, String> bracketMap = {
+      ')': '(',
+      '}': '{',
+      ']': '['
+    };
+
+    final List<String> stack = [];
+
+    for (int i = 0; i < s.length; i++) {
+      String char = s[i];
+
+      if (bracketMap.containsKey(char)) {
+        if (stack.isEmpty) {
+          return false;
+        }
+
+        String topElement = stack.removeLast();
+
+        if (topElement != bracketMap[char]) {
+          return false;
+        }
       } else {
-        return false;
+        stack.add(char);
       }
     }
-    return true;
+
+    return stack.isEmpty;
   }
 }
