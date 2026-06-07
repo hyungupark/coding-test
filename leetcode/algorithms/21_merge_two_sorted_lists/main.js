@@ -1,69 +1,109 @@
+function ListNode(val, next) {
+  this.val = val === undefined ? 0 : val;
+  this.next = next === undefined ? null : next;
+}
+
+/**
+ * Iterative + Dummy Node
+ *
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(1)
+ */
 /**
  * @param {ListNode} list1
  * @param {ListNode} list2
  * @return {ListNode}
  */
 var mergeTwoLists = function (list1, list2) {
-  if (!list1 && !list2) {
-    return null;
+  const dummy = new ListNode();
+  let curr_head = dummy;
+
+  while (list1 && list2) {
+    if (list1.val > list2.val) {
+      curr_head.next = list2;
+      list2 = list2.next;
+    } else {
+      curr_head.next = list1;
+      list1 = list1.next;
+    }
+    curr_head = curr_head.next;
   }
+
+  curr_head.next = list1 ? list1 : list2;
+
+  return dummy.next;
+};
+
+
+// Solution
+/**
+ * Solution 1
+ *
+ * Iterative + Dummy Node
+ *
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var solution1 = function (list1, list2) {
+  const dummy = new ListNode(0);
+  let current = dummy;
+
+  while (list1 !== null && list2 !== null) {
+    if (list1.val <= list2.val) {
+      current.next = list1;
+      list1 = list1.next;
+    } else {
+      current.next = list2;
+      list2 = list2.next;
+    }
+    current = current.next;
+  }
+
+  current.next = list1 !== null ? list1 : list2;
+
+  return dummy.next;
+};
+
+/**
+ * Solution 2
+ *
+ * Recursive
+ *
+ * Complexities:
+ *   N - Length of `list1`
+ *   M - Length of `list2`
+ *   - Time Complexity: O(N + M)
+ *   - Space Complexity: O(N + M)
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var solution2 = function (list1, list2) {
   if (!list1) {
     return list2;
-  } else if (!list2) {
+  }
+  if (!list2) {
+    return list1;
+  }
+
+  if (list1.val <= list2.val) {
+    list1.next = solution2(list1.next, list2);
     return list1;
   } else {
-    const valArray = [];
-    do {
-      valArray.push(list1.val);
-      list1 = list1.next;
-    } while (list1);
-    do {
-      valArray.push(list2.val);
-      list2 = list2.next;
-    } while (list2);
-    valArray.sort((prev, next) => prev - next);
-    console.log(valArray);
-    const listNodeArray = [];
-    for (const val of valArray) {
-      listNodeArray.push(new ListNode(val));
-    }
-    for (let i = 0; i < listNodeArray.length - 1; i++) {
-      listNodeArray[i].next = listNodeArray[i + 1];
-    }
-    return listNodeArray[0];
+    list2.next = solution2(list1, list2.next);
+    return list2;
   }
-};
-
-// Best Solution
-// Best Solution 1:
-var bestSolution1 = function (l1, l2) {
-  if (!l1) {
-    return l2;
-  } else if (!l2) {
-    return l1;
-  } else if (l1.val <= l2.val) {
-    l1.next = mergeTwoLists(l1.next, l2);
-    return l1;
-  } else {
-    l2.next = mergeTwoLists(l1, l2.next);
-    return l2;
-  }
-};
-
-// Best Solution 2:
-var bestSolution12 = function (l1, l2) {
-  var mergedHead = { val: -1, next: null }, crt = mergedHead;
-  while (l1 && l2) {
-    if (l1.val > l2.val) {
-      crt.next = l2;
-      l2 = l2.next;
-    } else {
-      crt.next = l1;
-      l1 = l1.next;
-    }
-    crt = crt.next;
-  }
-  crt.next = l1 || l2;
-
-  return mergedHead.next;
 };
