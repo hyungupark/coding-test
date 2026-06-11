@@ -1,61 +1,44 @@
 #include <stdbool.h>
 
-int removeElement(int *nums, int numsSize, int val)
-{
+/**
+ * Two Pointers
+ * 
+ * Complexities:
+ *   N - numsSize
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+int removeElement(int* nums, int numsSize, int val) {
     int i = 0;
-    for (int j = 0; j < numsSize; j++)
-    {
-        if (nums[j] != val)
-        {
+
+    for (int j = 0; j < numsSize; j++) {
+        if (nums[j] != val) {
             int temp = nums[i];
             nums[i] = nums[j];
             nums[j] = temp;
             i++;
         }
     }
+
     return i;
 }
 
 
-// Best Solution
-// Best Solution 1:
-int bestSolution1(int *nums, int numsSize, int val)
-{
-    int count = 0;
-
-    for (int i = 0; i < numsSize; i++)
-    {
-        if (nums[i] == val)
-        {
-            count++;
-        }
-        else
-        {
-            nums[i - count] = nums[i];
-        }
-    }
-
-    return (numsSize - count);
-}
-
-// Best Solution 2:
-int bestSolution2(int *nums, int numsSize, int val)
-{
-    int appendIndex = 0;
-    bool find = false;
+// Solution
+/**
+ * Two Pointers
+ * 
+ * Complexities:
+ *   N - numsSize
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+int solution(int* nums, int numsSize, int val) {
     int k = 0;
 
-    for (int i = 0; i < numsSize; i++)
-    {
-        if (nums[i] == val && !find)
-        {
-            appendIndex = i;
-            find = true;
-        }
-        if (nums[i] != val)
-        {
-            nums[appendIndex] = nums[i];
-            appendIndex++;
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] != val) {
+            nums[k] = nums[i];
             k++;
         }
     }
