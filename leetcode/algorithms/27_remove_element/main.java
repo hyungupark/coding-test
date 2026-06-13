@@ -3,6 +3,14 @@ import java.util.Arrays;
 import java.util.List;
 
 class RemoveElement {
+  /**
+   * Two Pointers
+   *
+   * Complexities:
+   *   N - Length of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   public int removeElement(int[] nums, int val) {
     List<Integer> newNums = new ArrayList<>();
     for (Integer num : nums) {
@@ -18,41 +26,25 @@ class RemoveElement {
   }
 
 
-  // Best Solution
-  // Best Solution 1:
-  public int bestSolution1(int[] nums, int val) {
-    int index = 0;
+  // Solution
+  /**
+   * Two Pointers
+   *
+   * Complexities:
+   *   N - Length of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  public int solution(int[] nums, int val) {
+    int k = 0;
+
     for (int i = 0; i < nums.length; i++) {
       if (nums[i] != val) {
-        nums[index] = nums[i];
-        index++;
+        nums[k] = nums[i];
+        k++;
       }
     }
-    return index;
-  }
 
-  // Best Solution 2:
-  public int bestSolution2(int[] nums, int val) {
-    int i = 0;
-    for (int j = 0; j < nums.length; j++) {
-      if (nums[j] != val) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
-        i++;
-      }
-    }
-    return i;
-  }
-
-  // Best Solution 3:
-  public int bestSolution3(int[] nums, int val) {
-    int l = nums.length;
-    for (int i = 0; i < l; i++) {
-      if (nums[i] == val) {
-        nums[i--] = nums[l-- - 1];
-      }
-    }
-    return l;
+    return k;
   }
 }
