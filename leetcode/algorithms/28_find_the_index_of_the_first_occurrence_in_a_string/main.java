@@ -1,73 +1,76 @@
 class FindTheIndexOfTheFirstOccurrenceInAString {
+  /**
+   * Brute Force, Sliding Window
+   *
+   * Complexities:
+   *   N - Length of `haystack`
+   *   M - Length of `needle`
+   *   - Time Complexity: O(N * M)
+   *   - Space Complexity: O(1)
+   */
   public int strStr(String haystack, String needle) {
-    if (haystack == null || haystack.equals("")) {
+    int haystackLen = haystack.length();
+    int needleLen = needle.length();
+
+    if (needleLen > haystackLen) {
       return -1;
     }
-    if (needle == null || needle.equals("")) {
-      return 0;
-    }
-    return haystack.indexOf(needle, 0);
-  }
 
+    char[] haystackCharArray = haystack.toCharArray();
+    char[] needleCharArray = needle.toCharArray();
 
-  // Best Solution
-  // Best Solution 1:
-  public int bestSolution1(String haystack, String needle) {
-    for (int i = 0;; i++) {
-      for (int j = 0;; j++) {
-        if (j == needle.length()) {
-          return i;
-        }
-        if (i + j == haystack.length()) {
-          return -1;
-        }
-        if (needle.charAt(j) != haystack.charAt(i + j)) {
+    for (int haystackIdx = 0; haystackIdx <= haystackLen - needleLen; haystackIdx++) {
+      boolean isMatch = true;
+
+      for (int needleIdx = 0; needleIdx < needleLen; needleIdx++) {
+        if (haystackCharArray[haystackIdx + needleIdx] != needleCharArray[needleIdx]) {
+          isMatch = false;
           break;
         }
       }
-    }
-  }
 
-  // Best Solution 2:
-  public int bestSolution2(String haystack, String needle) {
-    int haylength = haystack.length();
-    int needlelength = needle.length();
-    if (haylength < needlelength) {
-      return -1;
-    }
-    for (int i = 0; i <= haystack.length() - needle.length(); i++) {
-      int j = 0;
-      while (j < needle.length() && haystack.charAt(i + j) == needle.charAt(j)) {
-        j++;
-      }
-      if (j == needle.length()) {
-        return i;
+      if (isMatch) {
+        return haystackIdx;
       }
     }
+
     return -1;
   }
 
-  // Best Solution 3:
-  public int bestSolution3(String haystack, String needle) {
-    int hLen = haystack.length();
-    int nLen = needle.length();
-    int nIndex = 0;
-    for (int i = 0; i < hLen; i++) {
-      // as long as the characters are equal, increment needleIndex
-      if (haystack.charAt(i) == needle.charAt(nIndex)) {
-        nIndex++;
-      } else {
-        // start from the next index of previous start index
-        i = i - nIndex;
-        // needle should start from index 0
-        nIndex = 0;
+
+  // Solution
+  /**
+   * Brute Force, Sliding Window
+   *
+   * Complexities:
+   *   N - Length of `haystack`
+   *   M - Length of `needle`
+   *   - Time Complexity: O(N * M)
+   *   - Space Complexity: O(1)
+   */
+  public int solution(String haystack, String needle) {
+    int n = haystack.length();
+    int m = needle.length();
+
+    if (m > n) {
+      return -1;
+    }
+
+    for (int i = 0; i <= n - m; i++) {
+      int j = 0;
+
+      while (j < m) {
+        if (haystack.charAt(i + j) != needle.charAt(j)) {
+          break;
+        }
+        j++;
       }
-      // check if needleIndex reached needle length
-      if (nIndex == nLen) {
-        // return the first index
-        return i - nLen + 1;
+
+      if (j == m) {
+        return i;
       }
     }
+
     return -1;
   }
 }
