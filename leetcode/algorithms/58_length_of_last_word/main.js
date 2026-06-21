@@ -1,4 +1,12 @@
 /**
+ * Builtin function
+ *
+ * Complexities:
+ *   N - Length of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
  * @param {string} s
  * @return {number}
  */
@@ -8,14 +16,44 @@ var lengthOfLastWord = function (s) {
 };
 
 
-// Best Solution
-// Best Solution 1:
-var bestSolution1 = function (s) {
-  return s.trim().split(" ").pop().length;
+// Solution
+/**
+ * Solution 1
+ *
+ * Reverse Traversal
+ *
+ * Complexities:
+ *   N - Length of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+var solution1 = function (s) {
+  let length = 0;
+  let i = s.length - 1;
+
+  while (i >= 0 && s[i] === " ") {
+    i--;
+  }
+
+  while (i >= 0 && s[i] !== " ") {
+    length++;
+    i--;
+  }
+
+  return length;
 };
 
-// Best Solution 2:
-var bestSolution2 = function (s) {
-  let trimmedString = s.trim();
-  return trimmedString.length - trimmedString.lastIndexOf(" ") - 1;
+/**
+ * Solution 2
+ *
+ * Built-in function
+ *
+ * Complexities:
+ *   N - Length of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+var solution2 = function (s) {
+  const words = s.trim().split(" ");
+  return words[words.length - 1].length;
 };
