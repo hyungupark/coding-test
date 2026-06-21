@@ -1,20 +1,23 @@
 #include <string>
 using namespace std;
 
-class LengthOfLastWord
-{
+class LengthOfLastWord {
 public:
-    int lengthOfLastWord(string s)
-    {
+    /**
+     * Reverse Traversal
+     *
+     * Complexities:
+     *   N - Length of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int lengthOfLastWord(string s) {
         int result = 0;
-        for (int i = s.size(); i >= 0; i--)
-        {
-            if (s[i] != ' ' && s[i] != '\0')
-            {
+
+        for (int i = s.size(); i >= 0; i--) {
+            if (s[i] != ' ' && s[i] != '\0') {
                 result++;
-            }
-            else if (s[i] = ' ' && result > 0)
-            {
+            } else if (s[i] = ' ' && result > 0) {
                 break;
             }
         }
@@ -23,57 +26,52 @@ public:
     }
 
 
-    // Best Solution
-    // Best Solution 1:
-    int bestSolution1(string s)
-    {
-        int len = 0, tail = s.length() - 1;
-        while (tail >= 0 && s[tail] == ' ')
-        {
-            tail--;
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * Reverse Traversal
+     *
+     * Complexities:
+     *   N - Length of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int solution1(string s) {
+        int length = 0;
+        int i = s.length() - 1;
+
+        while (i >= 0 && s[i] == ' ') {
+            i--;
         }
-        while (tail >= 0 && s[tail] != ' ')
-        {
-            len++;
-            tail--;
+
+        while (i >= 0 && s[i] != ' ') {
+            length++;
+            i--;
         }
-        return len;
+
+        return length;
     }
 
-    // Best Solution 2:
-    int bestSolution2(string s)
-    {
-        int siz = s.size(), kount = 0, flag = 0;
-        for (int i = siz - 1; i >= 0; i--)
-        {
-            if (s[i] == ' ' && flag)
-            {
-                break;
-            }
-            if (s[i] != ' ')
-            {
-                flag = 1;
-                kount++;
-            }
-        }
-        return kount;
-    }
+    /**
+     * Solution 2
+     * 
+     * find_last_not_of
+     *
+     * Complexities:
+     *   N - Length of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int solution2(string s) {
+        size_t last_char_idx = s.find_last_not_of(' ');
 
-    // Best Solution 3:
-    int bestSolution3(string s)
-    {
-        int ans = 0;
-        for (int i = s.size() - 1; i >= 0; --i)
-        {
-            if (s[i] == ' ' && ans > 0)
-            {
-                return ans;
-            }
-            if (s[i] != ' ')
-            {
-                ans++;
-            }
+        if (last_char_idx == string::npos) {
+            return 0;
         }
-        return ans;
+
+        size_t last_space_idx = s.find_last_of(' ', last_char_idx);
+
+        return last_char_idx - last_space_idx;
     }
 };
