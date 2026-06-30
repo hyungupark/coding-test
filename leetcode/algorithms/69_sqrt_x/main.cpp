@@ -1,32 +1,31 @@
 #include <cmath>
 
-class SqrtX
-{
+class SqrtX {
 public:
-    int mySqrt(int x)
-    {
-        if (x == 0)
-        {
+    /**
+     * Binary Search
+     *
+     * Complexities:
+     *   N - Value of `x`
+     *   - Time Complexity: O(logᴺ)
+     *   - Space Complexity: O(1)
+     */
+    int mySqrt(int x) {
+        if (x == 0) {
             return 0;
         }
 
         long low = 1;
         long high = x;
 
-        while (low <= high)
-        {
+        while (low <= high) {
             long mid = (low + high) / 2;
 
-            if (mid == x / mid)
-            {
+            if (mid == x / mid) {
                 return (int)mid;
-            }
-            else if (mid > x / mid)
-            {
+            } else if (mid > x / mid) {
                 high = mid - 1;
-            }
-            else
-            {
+            } else {
                 low = mid + 1;
             }
         }
@@ -35,62 +34,61 @@ public:
     }
 
 
-    // Best Solution
-    // Best Solution 1:
-    int bestSolution1(int x)
-    {
-        long r = x;
-        while (r * r > x)
-        {
-            r = (r + x / r) / 2;
-        }
-        return r;
-    }
-
-    // Best Solution 2:
-    int bestSolution2(int x)
-    {
-        // For special cases when x is 0 or 1, return x.
-        // For special cases when x is 0 or 1, return x.
-        if (x == 0 || x == 1)
-        {
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * Binary Search
+     *
+     * Complexities:
+     *   N - Value of `x`
+     *   - Time Complexity: O(logᴺ)
+     *   - Space Complexity: O(1)
+     */
+    int solution1(int x) {
+        if (x == 0 || x == 1) {
             return x;
         }
 
-        // Initialize the search range for the square root.
-        int start = 1;
-        int end = x;
-        int mid = -1;
+        int left = 1;
+        int right = x;
+        int result = 0;
 
-        // Perform binary search to find the square root of x.
-        while (start <= end)
-        {
-            // Calculate the middle point using "start + (end - start) / 2" to avoid integer overflow.
-            mid = start + (end - start) / 2;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
 
-            // Convert mid to long to handle large values without overflow.
-            long long square = static_cast<long long>(mid) * mid;
-
-            // If the square of the middle value is greater than x, move the "end" to the left (mid - 1).
-            if (square > x)
-            {
-                end = mid - 1;
-            }
-            else if (square == x)
-            {
-                // If the square of the middle value is equal to x, we found the square root.
-                return mid;
-            }
-            else
-            {
-                // If the square of the middle value is less than x, move the "start" to the right (mid + 1).
-                start = mid + 1;
+            if (mid <= x / mid) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
             }
         }
 
-        // The loop ends when "start" becomes greater than "end", and "end" is the integer value of the square root.
-        // However, since we might have been using integer division in the calculations,
-        // we round down the value of "end" to the nearest integer to get the correct square root.
-        return static_cast<int>(std::round(end));
+        return result;
+    }
+
+    /**
+     * Solution 2
+     * 
+     * Newton-Raphson Method
+     *
+     * Complexities:
+     *   N - Value of `x`
+     *   - Time Complexity: O(logᴺ)
+     *   - Space Complexity: O(1)
+     */
+    int solution2(int x) {
+        if (x == 0) {
+            return 0;
+        }
+
+        long long r = x;
+
+        while (r * r > x) {
+            r = (r + x / r) / 2;
+        }
+
+        return (int)r;
     }
 };
