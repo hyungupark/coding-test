@@ -1,24 +1,81 @@
 class ClimbingStairs {
-  int climbstairs(int n) {
-    if (n < 2) {
-      return 1;
+  /**
+   * DP (Dynamic Programming) with Array
+   *
+   * Complexities:
+   *   N - Value of `n`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  int climbStairs(int n) {
+    if (n < 3) {
+      return n;
     }
 
-    List<int> dp = List<int>.filled(n, 0);
-    dp[0] = 1;
-    dp[1] = 2;
+    List<int> dp = List<int>.filled(n + 1, 0);
+    dp[1] = 1;
+    dp[2] = 2;
 
-    for (int i = 2; i < n; i++) {
+    for (int i = 3; i <= n; i++) {
       dp[i] = dp[i - 1] + dp[i - 2];
     }
 
-    return dp[n - 1];
+    return dp[n];
   }
 
-  // Best Solution
-  int bestSolution(int n) {
-    int a = 1, b = 1;
-    while (n-- > 0) a = (b += a) - a;
-    return a;
+
+  // Solution
+  /**
+   * Solution 1
+   *
+   * DP (Dynamic Programming)
+   *
+   * Complexities:
+   *   N - Value of `n`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  int solution1(int n) {
+    if (n <= 2) {
+      return n;
+    }
+
+    int prev2 = 1;
+    int prev1 = 2;
+
+    for (int i = 3; i <= n; i++) {
+      int current = prev1 + prev2;
+
+      prev2 = prev1;
+      prev1 = current;
+    }
+
+    return prev1;
+  }
+
+  /**
+   * Solution 2
+   *
+   * DP (Dynamic Programming) with Array
+   *
+   * Complexities:
+   *   N - Value of `n`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  int solution2(int n) {
+    if (n <= 2) {
+      return n;
+    }
+
+    List<int> dp = List.filled(n + 1, 0);
+    dp[1] = 1;
+    dp[2] = 2;
+
+    for (int i = 3; i <= n; i++) {
+      dp[i] = dp[i - 1] + dp[i - 2];
+    }
+
+    return dp[n];
   }
 }
