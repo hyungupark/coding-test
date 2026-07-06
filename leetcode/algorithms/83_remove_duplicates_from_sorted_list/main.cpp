@@ -1,30 +1,29 @@
-#include <cstddef>
-
-class Solution
-{
-    struct ListNode
-    {
+class RemoveDuplicatesFromSortedList {
+    struct ListNode {
         int val;
-        ListNode *next;
+        ListNode* next;
         ListNode() : val(0), next(nullptr) {}
         ListNode(int x) : val(x), next(nullptr) {}
-        ListNode(int x, ListNode *next) : val(x), next(next) {}
+        ListNode(int x, ListNode* next) : val(x), next(next) {}
     };
 
 public:
-    ListNode *deleteDuplicates(ListNode *head)
-    {
-        ListNode *current = head;
+    /**
+     * Iteration
+     * 
+     * Complexities:
+     *   N - Size of `head`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* curr_head = head;
 
-        while (current)
-        {
-            if (current->next && current->next->val == current->val)
-            {
-                current->next = current->next->next;
-            }
-            else
-            {
-                current = current->next;
+        while (curr_head) {
+            if (curr_head->next && curr_head->val == curr_head->next->val) {
+                curr_head->next = curr_head->next->next;
+            } else {
+                curr_head = curr_head->next;
             }
         }
 
@@ -32,70 +31,56 @@ public:
     }
 
 
-    // Best Solution
-    // Best Solution 1:
-    ListNode *bestSolution1(ListNode *head)
-    {
-        ListNode *cur = head;
-        while (cur)
-        {
-            while (cur->next && cur->val == cur->next->val)
-            {
-                cur->next = cur->next->next;
-            }
-            cur = cur->next;
-        }
-        return head;
-    }
-
-    // Best Solution 2:
-    ListNode *bestSolution2(ListNode *head)
-    {
-        ListNode *temp = head;
-        while (temp && temp->next)
-        {
-            if (temp->next->val == temp->val)
-            {
-                temp->next = temp->next->next;
-                continue;
-            }
-            temp = temp->next;
-        }
-        return head;
-    }
-
-    // Best Solution 3:
-    ListNode *bestSolution3(ListNode *head)
-    {
-        // Special case...
-        if (head == NULL || head->next == NULL)
-        {
+    // Solution
+    /**
+     * Solution 1
+     *
+     * Iteration
+     *
+     * Complexities:
+     *   N - Size of `head`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    ListNode* solution1(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) {
             return head;
         }
 
-        // Initialize two pointers tmp(slow) and curr(fast)...
-        ListNode *tmp = head;
-        ListNode *curr = head->next;
-        // Traverse all element through a while loop if curr node is not null...
-        while (curr != NULL)
-        {
-            // If the value of curr is equal to the value of tmp...
-            // It means the value is present in the linked list...
-            if (tmp->val == curr->val)
-            {
-                // Hence we do not need to include curr again in the linked list...
-                // So we increment the value of curr...
+        ListNode* curr = head;
+
+        while (curr != nullptr && curr->next != nullptr) {
+            if (curr->val == curr->next->val) {
+                ListNode* temp = curr->next;
+                
+                curr->next = curr->next->next;
+                
+                delete temp;
+            } else {
                 curr = curr->next;
             }
-            // Otherwise, we increment both the pointers.
-            else
-            {
-                tmp->next = curr;
-                tmp = curr;
-                curr = tmp->next;
-            }
         }
-        tmp->next = NULL;
-        return head; // Return the sorted linked list without any duplicate element...
+
+        return head;
+    }
+
+    /**
+     * Solution 2
+     *
+     * Recursion
+     *
+     * Complexities:
+     *   N - Size of `head`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    ListNode* solution2(ListNode* head) {
+        if (!head || !head->next) {
+            return head;
+        }
+
+        head->next = solution2(head->next);
+
+        return head->val == head->next->val ? head->next : head;
     }
 };
