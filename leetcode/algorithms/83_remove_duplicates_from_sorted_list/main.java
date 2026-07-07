@@ -16,44 +16,75 @@ class RemoveDuplicatesFromSortedList {
     }
   }
 
+  /**
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   public ListNode deleteDuplicates(ListNode head) {
-    ListNode result = head;
-    while (result != null) {
-      if (result.next != null && result.val == result.next.val) {
-        result.next = result.next.next;
+    ListNode currHead = head;
+
+    while (currHead != null) {
+      if (currHead.next != null && currHead.val == currHead.next.val) {
+        currHead.next = currHead.next.next;
       } else {
-        result = result.next;
+        currHead = currHead.next;
       }
     }
+
     return head;
   }
 
 
-  // Best Solution
-  // Best Solution 1: Recursive
-  public ListNode bestSolution1(ListNode head) {
+  // Solution
+  /**
+   * Solution 1
+   * 
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  public ListNode solution1(ListNode head) {
     if (head == null || head.next == null) {
       return head;
     }
-    head.next = bestSolution1(head.next);
-    return head.val == head.next.val ? head.next : head;
-  }
 
-  // Best Solution 2:
-  public ListNode bestSolution2(ListNode head) {
-    ListNode list = head;
+    ListNode curr = head;
 
-    while (list != null) {
-      if (list.next == null) {
-        break;
-      }
-      if (list.val == list.next.val) {
-        list.next = list.next.next;
+    while (curr != null && curr.next != null) {
+      if (curr.val == curr.next.val) {
+        curr.next = curr.next.next;
       } else {
-        list = list.next;
+        curr = curr.next;
       }
     }
 
     return head;
+  }
+
+  /**
+   * Solution 2
+   * 
+   * Recursion
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public ListNode solution2(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+
+    head.next = solution2(head.next);
+
+    return head.val == head.next.val ? head.next : head;
   }
 }
