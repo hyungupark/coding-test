@@ -5,12 +5,50 @@ class ListNode {
 }
 
 class RemoveDuplicatesFromSortedList {
+  /**
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   ListNode? deleteDuplicates(ListNode? head) {
+    ListNode? currHead = head;
+
+    while (currHead != null) {
+      if (currHead.next != null && currHead.next!.val == currHead.val) {
+        currHead.next = currHead.next!.next;
+      } else {
+        currHead = currHead.next;
+      }
+    }
+
+    return head;
+  }
+
+
+  // Solution
+  /**
+   * Solution 1
+   * 
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  ListNode? solution1(ListNode? head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+
     ListNode? current = head;
 
-    while (current != null) {
-      if (current.next != null && current.next!.val == current.val) {
-        current.next = current.next?.next;
+    while (current != null && current.next != null) {
+      if (current.val == current.next!.val) {
+        current.next = current.next!.next;
       } else {
         current = current.next;
       }
@@ -19,21 +57,23 @@ class RemoveDuplicatesFromSortedList {
     return head;
   }
 
-  // BestSolution
-  ListNode? bestSolution(ListNode? head) {
-    ListNode? value = head;
-
-    while (value != null && value.next != null) {
-      if (value.val == value.next?.val) {
-        // If the current value is the same as the next one,
-        // skip the next node
-        value.next = value.next?.next;
-      } else {
-        // Otherwise, just move to the next node
-        value = value.next;
-      }
+  /**
+   * Solution 2
+   * 
+   * Recursion
+   *
+   * Complexities:
+   *   N - Size of `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  ListNode? solution2(ListNode? head) {
+    if (head == null || head.next == null) {
+      return head;
     }
 
-    return head;
+    head.next = solution2(head.next);
+
+    return head.val == head.next!.val ? head.next : head;
   }
 }
