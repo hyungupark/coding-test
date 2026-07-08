@@ -8,32 +8,65 @@ class ListNode:
 
 
 class RemoveDuplicatesFromSortedList:
+    """
+    # Iteration
+    #
+    # Complexities:
+    #   N - Size of `head`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        result = head
-        while result:
-            if result.next and result.val == result.next.val:
-                result.next = result.next.next
+        curr_head: Optional[ListNode] = head
+
+        while curr_head:
+            if curr_head.next and curr_head.val == curr_head.next.val:
+                curr_head.next = curr_head.next.next
             else:
-                result = result.next
+                curr_head = curr_head.next
+
         return head
 
 
-    # Best Solution
-    # Best Solution 1: iterative
-    def bestSolution1(self, head: ListNode) -> ListNode:
-        cur = head
-        while cur:
-            while cur.next and cur.next.val == cur.val:
-                cur.next = cur.next.next  # skip duplicated node
-            cur = cur.next  # not duplicate of current node, move to next node
+    # Solution
+    """
+    # Solution 1
+    #
+    # Iteration
+    #
+    # Complexities:
+    #   N - Size of `head`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
+    def solution1(self, head: ListNode) -> ListNode:
+        if not head:
+            return None
+        
+        current = head
+        
+        while current and current.next:
+            if current.val == current.next.val:
+                current.next = current.next.next
+            else:
+                current = current.next
+                
         return head
 
-    # Best Solution 2:
-    def bestSolution2(self, head: ListNode) -> ListNode:
-        temp = head
-        while temp and temp.next:
-            if temp.next.val == temp.val:
-                temp.next = temp.next.next
-                continue
-            temp = temp.next
-        return head
+    """
+    # Solution 2
+    #
+    # Recursion
+    #
+    # Complexities:
+    #   N - Size of `head`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(N)
+    """
+    def solution2(self, head: ListNode) -> ListNode:
+        if head == None or head.next == None:
+            return head
+
+        head.next = self.solution2(head.next)
+
+        return head.next if head.val == head.next.val else head
