@@ -1,84 +1,115 @@
+#include <stdbool.h>
 #include <stdlib.h>
-
-struct TreeNode
-{
-    int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
-};
 
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-int *inorderTraversal(struct TreeNode *root, int *returnSize)
-{
-    int *result = malloc(sizeof(int *) * 100);
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+/**
+ * Recursion
+ * 
+ * Complexities:
+ *   N - Size of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+void getVal(struct TreeNode* node, int* array, int* returnSize) {
+    if (node) {
+        returnArray(node->left, array, returnSize);
+        array[(*returnSize)++] = node->val;
+        returnArray(node->right, array, returnSize);
+    }
+}
+
+int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    int* array = (int*)malloc(sizeof(int) * 1000);
     *returnSize = 0;
-    getVal(root, result, returnSize);
+
+    getval(root, array, returnSize);
+
+    return array;
+}
+
+
+// Solution
+/**
+ * Solution 1
+ * 
+ * Recursion
+ *
+ * Complexities:
+ *   N - Size of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+int countNodes(struct TreeNode* root) {
+    if (root == NULL) {
+        return 0;
+    }
+
+    return 1 + countNodes(root->left) + countNodes(root->right);
+}
+
+void inorder(struct TreeNode* root, int* arr, int* idx) {
+    if (root == NULL) {
+        return;
+    }
+
+    inorder(root->left, arr, idx);
+    arr[(*idx)++] = root->val;
+    inorder(root->right, arr, idx);
+}
+
+int* solution1(struct TreeNode* root, int* returnSize) {
+    int count = countNodes(root);
+
+    int* result = (int*)malloc(sizeof(int) * count);
+
+    int idx = 0;
+    inorder(root, result, &idx);
+
+    *returnSize = count;
     return result;
 }
 
-void getVal(struct TreeNode *node, int *array, int *returnSize)
-{
-    if (!node)
-    {
-        return;
-    }
-    getVal(node->left, array, returnSize);
-    array[(*returnSize)++] = node->val;
-    getVal(node->right, array, returnSize);
-}
+/**
+ * Solution 2
+ * 
+ * Iteration
+ *
+ * Complexities:
+ *   N - Size of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+#define MAX_NODES 100
 
-
-// Best Solution
-// Best Solution 1: Iterative using stack
-int *bestSolution1(struct TreeNode *root, int *returnSize)
-{
-    int *ans = malloc(100 * sizeof(int));
+int* solution2(struct TreeNode* root, int* returnSize) {
+    int* result = (int*)malloc(sizeof(int) * MAX_NODES);
     *returnSize = 0;
-    struct TreeNode **stack = malloc(100 * sizeof(struct TreeNode *));
-    int top = 0;
-    while (top || root)
-    {
-        if (root)
-        {
-            stack[top++] = root;
-            root = root->left;
-        }
-        else
-        {
-            root = stack[--top];
-            ans[(*returnSize)++] = root->val;
-            root = root->right;
-        }
-    }
-    free(stack);
-    ans = realloc(ans, (*returnSize) * sizeof(int));
-    return ans;
-}
 
-// Best Solution 2: Recursive
-void traverse(struct TreeNode *root, int *arr, int *returnSize)
-{
-    if (root->left)
-    {
-        traverse(root->left, arr, returnSize);
-    }
-    arr[(*returnSize)++] = root->val;
-    if (root->right)
-    {
-        traverse(root->right, arr, returnSize);
-    }
-}
+    struct TreeNode* stack[MAX_NODES];
+    int top = -1;
 
-int *bestSolution2(struct TreeNode *root, int *returnSize)
-{
-    int *arr = malloc(100 * sizeof(int));
-    *returnSize = 0;
-    if (root)
-    {
-        traverse(root, arr, returnSize);
+    struct TreeNode* curr = root;
+
+    while (curr != NULL || top != -1) {
+        while (curr != NULL) {
+            stack[++top] = curr;
+            curr = curr->left;
+        }
+
+        curr = stack[top--];
+        
+        result[(*returnSize)++] = curr->val;
+
+        curr = curr->right;
     }
-    arr = realloc(arr, (*returnSize) * sizeof(int));
-    return arr;
+
+    return result;
 }
