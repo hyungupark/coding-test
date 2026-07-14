@@ -4,7 +4,6 @@ import java.util.Stack;
 
 class BinaryTreeInorderTraversal {
   public class TreeNode {
-
     int val;
     TreeNode left;
     TreeNode right;
@@ -23,9 +22,17 @@ class BinaryTreeInorderTraversal {
     }
   }
 
+  /**
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
   public List<Integer> inorderTraversal(TreeNode root) {
-    List<TreeNode> totalRoot = new ArrayList<TreeNode>();
-    List<Integer> result = new ArrayList<Integer>();
+    List<TreeNode> totalRoot = new ArrayList<>();
+    List<Integer> result = new ArrayList<>();
 
     while (root != null || !totalRoot.isEmpty()) {
       if (root != null) {
@@ -37,43 +44,70 @@ class BinaryTreeInorderTraversal {
         root = root.right;
       }
     }
+
     return result;
   }
 
 
-  // Best Solution
-  // Best Solution 1: Iterative
-  public List<Integer> bestSolution1(TreeNode root) {
-    List<Integer> list = new ArrayList<Integer>();
+  // Solution
+  /**
+   * Solution 1
+   *
+   * Recursion
+   *
+   * Complexities:
+   *   N - Size of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  private void helper(TreeNode node, List<Integer> list) {
+    if (node == null) {
+      return;
+    }
 
-    Stack<TreeNode> stack = new Stack<TreeNode>();
-    TreeNode cur = root;
+    helper(node.left, list);
 
-    while (cur != null || !stack.empty()) {
-      while (cur != null) {
-        stack.add(cur);
-        cur = cur.left;
+    list.add(node.val);
+
+    helper(node.right, list);
+  }
+
+  public List<Integer> solution1(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    helper(root, result);
+
+    return result;
+  }
+
+  /**
+   * Solution 2
+   *
+   * Iteration
+   *
+   * Complexities:
+   *   N - Size of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public List<Integer> solution2(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode curr = root;
+
+    while (curr != null || !stack.isEmpty()) {
+      while (curr != null) {
+        stack.push(curr);
+        curr = curr.left;
       }
-      cur = stack.pop();
-      list.add(cur.val);
-      cur = cur.right;
+
+      curr = stack.pop();
+
+      result.add(curr.val);
+
+      curr = curr.right;
     }
 
-    return list;
-  }
-
-  // Best Solution 2: DFS
-  public List<Integer> bestSolution2(TreeNode root) {
-    List<Integer> res = new ArrayList<>();
-    helper(root, res);
-    return res;
-  }
-
-  public void helper(TreeNode root, List<Integer> res) {
-    if (root != null) {
-      helper(root.left, res);
-      res.add(root.val);
-      helper(root.right, res);
-    }
+    return result;
   }
 }
