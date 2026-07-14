@@ -9,66 +9,81 @@ class TreeNode:
 
 
 class BinaryTreeInorderTraversal:
+    """
+    # Iteration
+    #
+    # Complexities:
+    #   N - Size of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(N)
+    """
     def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        totalRoots = []
-        result = []
-        while root or len(totalRoots) > 0:
+        stack: List[TreeNode] = []
+        result: List[TreeNode] = []
+
+        while root or len(stack) > 0:
             if root:
-                totalRoots.append(root)
+                stack.append(root)
                 root = root.left
             else:
-                root = totalRoots.pop()
+                root = stack.pop()
                 result.append(root.val)
                 root = root.right
+
         return result
 
 
-    # Best Solution
-    # Best Solution 1: DFS Preorder
-    def bestSolution1(self, root: Optional[TreeNode]) -> List[int]:
-        return (
-            [root.val] + self.bestSolution1(root.left) + self.bestSolution1(root.right)
-            if root
-            else []
-        )
+    # Solution
+    """
+    # Solution 1
+    #
+    # Recursion
+    #
+    # Complexities:
+    #   N - Size of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(N)
+    """
+    def solution1(self, root: Optional[TreeNode]) -> List[int]:
+        result = []
 
-    # Best Solution 2: DFS Inorder
-    def bestSolution2(self, root: Optional[TreeNode]) -> List[int]:
-        return (
-            self.bestSolution2(root.left) + [root.val] + self.bestSolution2(root.right)
-            if root
-            else []
-        )
+        def dfs(node):
+            if not node:
+                return
 
-    # Best Solution 3: DFS Postorder
-    def bestSolution3(self, root: Optional[TreeNode]) -> List[int]:
-        return (
-            self.bestSolution3(root.left) + self.bestSolution3(root.right) + [root.val]
-            if root
-            else []
-        )
+            dfs(node.left)
 
-    # Best Solution 4: Recursively
-    def bestSolution4(self, root: Optional[TreeNode]) -> List[int]:
-        res = []
-        self.helper(root, res)
-        return res
+            result.append(node.val)
 
-    def helper(self, root, res):
-        if root:
-            self.helper(root.left, res)
-            res.append(root.val)
-            self.helper(root.right, res)
+            dfs(node.right)
 
-    # Best Solution 5: Iteratively
-    def bestSolution5(self, root: Optional[TreeNode]) -> List[int]:
-        res, stack = [], []
-        while True:
-            while root:
-                stack.append(root)
-                root = root.left
-            if not stack:
-                return res
-            node = stack.pop()
-            res.append(node.val)
-            root = node.right
+        dfs(root)
+        return result
+
+    """
+    # Solution 2
+    #
+    # Iteration
+    #
+    # Complexities:
+    #   N - Size of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(N)
+    """
+    def solution2(self, root: Optional[TreeNode]) -> List[int]:
+        result = []
+        stack = []
+        current = root
+
+        while current or stack:
+            while current:
+                stack.append(current)
+                current = current.left
+
+            current = stack.pop()
+
+            result.append(current.val)
+
+            current = current.right
+
+        return result
