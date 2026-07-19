@@ -1,52 +1,69 @@
 #include <stdbool.h>
+#include <stddef.h>
 
-struct TreeNode
-{
+struct TreeNode {
     int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
+    struct TreeNode* left;
+    struct TreeNode* right;
 };
 
-bool checkNode(struct TreeNode *leftNode, struct TreeNode *rightNode)
-{
-    if (!leftNode && !rightNode)
-    {
+/**
+ * Recursion: DFS
+ * 
+ * Complexities:
+ *   N - The number of nodes in `root`
+ *   H - The heights of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+bool checkNode(struct TreeNode* leftNode, struct TreeNode* rightNode) {
+    if (!leftNode && !rightNode) {
         return true;
     }
 
-    if (!leftNode || !rightNode || leftNode->val != rightNode->val)
-    {
+    if (!leftNode || !rightNode || leftNode->val != rightNode->val) {
         return false;
     }
 
     return checkNode(leftNode->left, rightNode->right) && checkNode(leftNode->right, rightNode->left);
 }
 
-bool isSymmetric(struct TreeNode *root)
-{
+bool isSymmetric(struct TreeNode *root) {
     return checkNode(root->left, root->right);
 }
 
 
-// Best Solution
-bool bestSolution_isMirror(struct TreeNode *left, struct TreeNode *right)
-{
-    if (!left && !right)
-    {
+// Solution
+/**
+ * Recursion - DFS
+ * 
+ * Complexities:
+ *   N - The number of nodes in `root`
+ *   H - The heights of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+ bool isMirror(struct TreeNode* t1, struct TreeNode* t2) {
+    if (t1 == NULL && t2 == NULL) {
         return true;
     }
-    if (!left || !right)
-    {
+    
+    if (t1 == NULL || t2 == NULL) {
         return false;
     }
-    return (left->val == right->val) && bestSolution_isMirror(left->left, right->right) && bestSolution_isMirror(left->right, right->left);
+    
+    if (t1->val != t2->val) {
+        return false;
+    }
+    
+    return isMirror(t1->left, t2->right) && isMirror(t1->right, t2->left);
 }
 
-bool bestSolution(struct TreeNode *root)
-{
-    if (!root)
-    {
+bool solution(struct TreeNode* root) {
+    if (root == NULL) {
         return true;
     }
-    return bestSolution_isMirror(root->left, root->right);
+    
+    return isMirror(root->left, root->right);
 }
+
