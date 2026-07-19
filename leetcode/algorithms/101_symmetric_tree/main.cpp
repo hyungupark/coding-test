@@ -1,33 +1,36 @@
 #include <queue>
 using namespace std;
 
-class Solution
-{
-    struct TreeNode
-    {
+class SymmetricTree {
+    struct TreeNode {
         int val;
-        TreeNode *left;
-        TreeNode *right;
+        TreeNode* left;
+        TreeNode* right;
         TreeNode() : val(0), left(nullptr), right(nullptr) {}
         TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+        TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
     };
 
 public:
-    bool isSymmetric(TreeNode *root)
-    {
+    /**
+     * Recursion: DFS
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    bool isSymmetric(TreeNode* root) {
         return checkNode(root->left, root->right);
     }
 
-    bool checkNode(TreeNode *leftNode, TreeNode *rightNode)
-    {
-        if (leftNode == nullptr && rightNode == nullptr)
-        {
+    bool checkNode(TreeNode* leftNode, TreeNode* rightNode) {
+        if (leftNode == nullptr && rightNode == nullptr) {
             return true;
         }
 
-        if (leftNode == nullptr || rightNode == nullptr || leftNode->val != rightNode->val)
-        {
+        if (leftNode == nullptr || rightNode == nullptr || leftNode->val != rightNode->val) {
             return false;
         }
 
@@ -35,65 +38,83 @@ public:
     }
 
 
-    // Best Solution
-    // Best Solution 1: Recursive
-    bool bestSolution1(TreeNode *root)
-    {
-        if (!root)
-        {
+    // Solution
+    /**
+     * Solution 1
+     *
+     * Recursion - DFS
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    bool solution1(TreeNode* root) {
+        if (root == nullptr) {
             return true;
         }
-        return bestSolution1_isMirror(root->left, root->right);
+
+        return isMirror(root->left, root->right);
     }
 
-    bool bestSolution1_isMirror(TreeNode *left, TreeNode *right)
-    {
-        if (!left && !right)
-        {
+    bool isMirror(TreeNode* t1, TreeNode* t2) {
+        if (t1 == nullptr && t2 == nullptr) {
             return true;
         }
-        if (!left || !right)
-        {
+
+        if (t1 == nullptr || t2 == nullptr) {
             return false;
         }
-        return (left->val == right->val) && bestSolution1_isMirror(left->left, right->right) && bestSolution1_isMirror(left->right, right->left);
+
+        if (t1->val != t2->val) {
+            return false;
+        }
+
+        return isMirror(t1->left, t2->right) && isMirror(t1->right, t2->left);
     }
 
-    // Best Solution 2: Iterative
-    bool bestSolution2(TreeNode *root)
-    {
-        TreeNode *left, *right;
-        if (!root)
-        {
+    /**
+     * Solution 2
+     *
+     * Iteration
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    bool solution2(TreeNode* root) {
+        if (!root) {
             return true;
         }
 
-        queue<TreeNode *> q1, q2;
-        q1.push(root->left);
-        q2.push(root->right);
-        while (!q1.empty() && !q2.empty())
-        {
-            left = q1.front();
-            q1.pop();
-            right = q2.front();
-            q2.pop();
-            if (NULL == left && NULL == right)
-            {
+        queue<TreeNode*> q;
+        q.push(root->left);
+        q.push(root->right);
+
+        while (!q.empty()) {
+            TreeNode* t1 = q.front();
+            q.pop();
+            TreeNode* t2 = q.front();
+            q.pop();
+
+            if (!t1 && !t2) {
                 continue;
             }
-            if (NULL == left || NULL == right)
-            {
+
+            if (!t1 || !t2 || t1->val != t2->val) {
                 return false;
             }
-            if (left->val != right->val)
-            {
-                return false;
-            }
-            q1.push(left->left);
-            q1.push(left->right);
-            q2.push(right->right);
-            q2.push(right->left);
+
+            q.push(t1->left);
+            q.push(t2->right);
+
+            q.push(t1->right);
+            q.push(t2->left);
         }
+
         return true;
     }
 };
