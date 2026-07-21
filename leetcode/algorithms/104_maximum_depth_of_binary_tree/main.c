@@ -1,14 +1,22 @@
-struct TreeNode
-{
+#include <stdlib.h>
+
+struct TreeNode {
     int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
+    struct TreeNode* left;
+    struct TreeNode* right;
 };
 
-int maxDepth(struct TreeNode *root)
-{
-    if (!root)
-    {
+/**
+ * Recursion: DFS
+ * 
+ * Complexities:
+ *   N - The number of nodes in `root`
+ *   H - The heights of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+int maxDepth(struct TreeNode* root) {
+    if (!root) {
         return 0;
     }
 
@@ -18,16 +26,24 @@ int maxDepth(struct TreeNode *root)
     return left >= right ? left + 1 : right + 1;
 }
 
-// Best Solution
-int bestSolution(struct TreeNode *root)
-{
-    if (!root)
-    {
+
+// Solution
+/**
+ * Recursion - DFS
+ * 
+ * Complexities:
+ *   N - The number of nodes in `root`
+ *   H - The heights of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+int solution(struct TreeNode* root) {
+    if (root == NULL) {
         return 0;
     }
 
-    int left = maxDepth(root->left);
-    int right = maxDepth(root->right);
+    int leftDepth = solution(root->left);
+    int rightDepth = solution(root->right);
 
-    return left >= right ? left + 1 : right + 1;
+    return (leftDepth > rightDepth ? leftDepth : rightDepth) + 1;
 }
