@@ -1,25 +1,31 @@
-#include <algorithm>
-#include <queue>
-#include <stack>
+#include <algorithm> // std::max
+#include <queue>     // std::queue
+#include <stack>     // std::stack
+#include <utility>   // std::pair
 using namespace std;
 
-class Solution
-{
-    struct TreeNode
-    {
+class MaximumDepthOfBinaryTree {
+    struct TreeNode {
         int val;
-        TreeNode *left;
-        TreeNode *right;
+        TreeNode* left;
+        TreeNode* right;
         TreeNode() : val(0), left(nullptr), right(nullptr) {}
         TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+        TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
     };
 
 public:
-    int maxDepth(TreeNode *root)
-    {
-        if (!root)
-        {
+    /**
+     * Recursion - DFS
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
 
@@ -30,76 +36,66 @@ public:
     }
 
 
-    // Best Solution
-    // Best Solution 1: Recursive (DFS)
-    int bestSolution1(TreeNode *root)
-    {
-        if (!root)
-        {
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * Recursion - DFS
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    int solution1(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
-        int maxLeft = maxDepth(root->left);
-        int maxRight = maxDepth(root->right);
-        return max(maxLeft, maxRight) + 1;
+
+        int leftDepth = solution1(root->left);
+        int rightDepth = solution1(root->right);
+
+        return 1 + max(leftDepth, rightDepth);
     }
 
-    // Best Solution 2: Iterative (DFS)
-    int bestSolution2(TreeNode *root)
-    {
-        if (root == NULL)
-        {
+    /**
+     * Solution 2
+     *
+     * Iteration - BFS
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The heights of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    int solution2(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
-        stack<pair<TreeNode *, int>> s;
-        s.push({root, 1});
-        int len = 1;
-        while (!s.empty())
-        {
-            pair<TreeNode *, int> front = s.top();
-            s.pop();
-            len = max(len, front.second);
-            if (front.first->left)
-            {
-                s.push({front.first->left, front.second + 1});
-            }
-            if (front.first->right)
-            {
-                s.push({front.first->right, front.second + 1});
-            }
-        }
-        return len;
-    }
 
-    // Best Solution 3: Iterative (BFS)
-    int bestSolution3(TreeNode *root)
-    {
-        if (root == NULL)
-        {
-            return 0;
-        }
-        queue<TreeNode *> q;
+        queue<TreeNode*> q;
         q.push(root);
         int depth = 0;
 
-        while (!q.empty())
-        {
-            ++depth;
-            int s = q.size();
-            for (int i = 0; i < s; i++)
-            {
-                TreeNode *front = q.front();
+        while (!q.empty()) {
+            depth++;
+            int levelSize = q.size();
+
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* node = q.front();
                 q.pop();
 
-                if (front->left)
-                {
-                    q.push(front->left);
+                if (node->left) {
+                    q.push(node->left);
                 }
-                if (front->right)
-                {
-                    q.push(front->right);
+                if (node->right) {
+                    q.push(node->right);
                 }
             }
         }
+
         return depth;
     }
 };
