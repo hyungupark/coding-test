@@ -10,56 +10,76 @@ class TreeNode:
 
 
 class MaximumDepthOfBinaryTree:
+    """
+    # Recursion - DFS
+    #
+    # Complexities:
+    #   N - The number of nodes in `root`
+    #   H - The heights of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(H)
+    """
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        if root is None:
+        if root == None:
             return 0
-        return self.returnDepth(0, root)
 
-    def returnDepth(self, depth_: int, node_: Optional[TreeNode]) -> int:
-        depth = depth_ + 1
-        if node_.left is not None:
-            leftDepth = self.returnDepth(depth_ + 1, node_.left)
-            if leftDepth > depth:
-                depth = leftDepth
-        if node_.right is not None:
-            rightDepth = self.returnDepth(depth_ + 1, node_.right)
-            if rightDepth > depth:
-                depth = rightDepth
+        left: int = self.maxDepth(root=root.left)
+        right: int = self.maxDepth(root=root.right)
+
+        return max(left, right) + 1
+
+
+    # Solution
+    """
+    # Solution 1
+    #
+    # Recursion - DFS
+    #
+    # Complexities:
+    #   N - The number of nodes in `root`
+    #   H - The heights of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(H)
+    """
+    def solution1(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+
+        left_depth = self.solution1(root.left)
+        right_depth = self.solution1(root.right)
+
+        return max(left_depth, right_depth) + 1
+
+    """
+    # Solution 2
+    #
+    # Iteration - BFS
+    #
+    # Complexities:
+    #   N - The number of nodes in `root`
+    #   H - The heights of `root`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(H)
+    """
+    def solution2(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+
+        queue = deque([root])
+        depth = 0
+
+        while queue:
+            level_size = len(queue)
+
+            for _ in range(level_size):
+                node = queue.popleft()
+
+                if node.left:
+                    queue.append(node.left)
+
+                if node.right:
+                    queue.append(node.right)
+
+            depth += 1
+
         return depth
-
-
-    # Best Solution
-    # Best Solution 1: RECURSIVE DFS
-    def bestSolution1(self, root: Optional[TreeNode]) -> int:
-        def dfs(root, depth):
-            if not root:
-                return depth
-            return max(dfs(root.left, depth + 1), dfs(root.right, depth + 1))
-
-        return dfs(root, 0)
-
-    # Best Solution 2: Recursive
-    def bestSolution2(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-        return max(self.bestSolution2(root.left), self.bestSolution2(root.right)) + 1
-
-    # Best Solution 3: Iterative
-    def bestSolution3(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-        worklist = deque([root])
-        num_node_level = 1
-        levels = 0
-        while worklist:
-            node = worklist.popleft()
-            if node.left:
-                worklist.append(node.left)
-            if node.right:
-                worklist.append(node.right)
-            num_node_level -= 1
-            if num_node_level == 0:
-                levels += 1
-                num_node_level = len(worklist)
-
-        return levels
