@@ -1,6 +1,5 @@
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 class MaximumDepthOfBinaryTree {
   public class TreeNode {
@@ -22,93 +21,88 @@ class MaximumDepthOfBinaryTree {
     }
   }
 
+  /**
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
   public int maxDepth(TreeNode root) {
     if (root == null) {
       return 0;
     }
-    return returnDepth(0, root);
-  }
 
-  public int returnDepth(int depth_, TreeNode node_) {
-    int depth = depth_ + 1;
-    if (node_.left != null) {
-      int leftDepth = returnDepth(depth_ + 1, node_.left);
-      if (leftDepth > depth) {
-        depth = leftDepth;
-      }
-    }
-    if (node_.right != null) {
-      int rightDepth = returnDepth(depth_ + 1, node_.right);
-      if (rightDepth > depth) {
-        depth = rightDepth;
-      }
-    }
-    return depth;
-  }
+    int left = maxDepth(root.left);
+    int right = maxDepth(root.right);
 
-
-  // Best Solution
-  // Best Solution 1: Recursive
-  public int bestSolution1(TreeNode root) {
-    // Base Condition
-    if (root == null) {
-      return 0;
-    }
-    // Hypothesis
-    int left = bestSolution1(root.left);
-    int right = bestSolution1(root.right);
-    // Induction
     return Math.max(left, right) + 1;
   }
 
-  // Best Solution 2: Iterative - DFS
-  public int bestSolution2(TreeNode root) {
+
+  // Solution
+  /**
+   * Solution 1
+   *
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
+  public int solution1(TreeNode root) {
     if (root == null) {
       return 0;
     }
 
-    Stack<TreeNode> stack = new Stack<>();
-    Stack<Integer> value = new Stack<>();
-    stack.push(root);
-    value.push(1);
-    int max = 0;
-    while (!stack.isEmpty()) {
-      TreeNode node = stack.pop();
-      int temp = value.pop();
-      max = Math.max(temp, max);
-      if (node.left != null) {
-        stack.push(node.left);
-        value.push(temp + 1);
-      }
-      if (node.right != null) {
-        stack.push(node.right);
-        value.push(temp + 1);
-      }
-    }
-    return max;
+    int leftDepth = solution1(root.left);
+    int rightDepth = solution1(root.right);
+
+    return Math.max(leftDepth, rightDepth) + 1;
   }
 
-  // Best Solution 3: Iterative - BFS
-  public int bestSolution3(TreeNode root) {
+  /**
+   * Solution 2
+   *
+   * Iteration - BFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
+  public int solution2(TreeNode root) {
     if (root == null) {
       return 0;
     }
-    Queue<TreeNode> queue = new LinkedList<TreeNode>();
+
+    Queue<TreeNode> queue = new LinkedList<>();
     queue.offer(root);
-    int count = 0;
+    int depth = 0;
+
     while (!queue.isEmpty()) {
-      int size = queue.size();
-      while (size-- > 0) {
+      int levelSize = queue.size();
+
+      for (int i = 0; i < levelSize; i++) {
         TreeNode node = queue.poll();
+
         if (node.left != null) {
           queue.offer(node.left);
         }
+
         if (node.right != null) {
           queue.offer(node.right);
         }
       }
-      count++;
+
+      depth++;
     }
-    return count;
+
+    return depth;
   }
 }
