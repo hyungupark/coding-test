@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 class TreeNode {
@@ -8,29 +9,88 @@ class TreeNode {
 }
 
 class MaximumDepthOfBinaryTree {
+  /**
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
   int maxDepth(TreeNode? root) {
-    int returnDepth(TreeNode? node, int depth) {
-      if (node == null) {
-        return depth;
-      }
-      return 1 + max(returnDepth(node.left, depth), returnDepth(node.right, depth));
+    if (root == null) {
+      return 0;
     }
 
-    return returnDepth(root, 0);
+    final int left = maxDepth(root.left);
+    final int right = maxDepth(root.right);
+
+    return max(left, right) + 1;
   }
 
-  // Best Solution
-  int bestSolution(TreeNode? root) {
-    return visiter(root);
+
+  // Solution
+  /**
+   * Solution 1
+   *
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
+  int solution1(TreeNode? root) {
+    if (root == null) {
+      return 0;
+    }
+
+    int leftDepth = solution1(root.left);
+    int rightDepth = solution1(root.right);
+
+    return max(leftDepth, rightDepth) + 1;
   }
 
-  int visiter(TreeNode? root) {
-    if (root == null) return 0;
-    int sum = 1;
+  /**
+   * Solution 2
+   *
+   * Iteration - BFS
+   *
+   * Complexities:
+   *   N - The number of nodes in `root`
+   *   H - The heights of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(H)
+   */
+  int solution2(TreeNode? root) {
+    if (root == null) {
+      return 0;
+    }
 
-    final leftSum = visiter(root.left);
-    final rightSum = visiter(root.right);
+    Queue<TreeNode> queue = Queue();
+    queue.add(root);
+    int depth = 0;
 
-    return sum + max(leftSum, rightSum);
+    while (queue.isNotEmpty) {
+      int levelSize = queue.length;
+
+      for (int i = 0; i < levelSize; i++) {
+        TreeNode node = queue.removeFirst();
+
+        if (node.left != null) {
+          queue.add(node.left!);
+        }
+
+        if (node.right != null) {
+          queue.add(node.right!);
+        }
+      }
+
+      depth++;
+    }
+
+    return depth;
   }
 }
