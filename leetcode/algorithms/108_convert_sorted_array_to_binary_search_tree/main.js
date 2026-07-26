@@ -5,6 +5,14 @@ function TreeNode(val, left, right) {
 }
 
 /**
+ * Divide-and-conquer
+ *
+ * Complexities:
+ *   N - Size of `nums`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(logᴺ)
+ */
+/**
  * @param {number[]} nums
  * @return {TreeNode}
  */
@@ -23,44 +31,34 @@ var sortedArrayToBST = function (nums) {
 };
 
 
-// Best Solution
-// Best Solution 1:
-var bestSolution1 = function (nums) {
-  // Call the function recursively...
-  return bestSolution1_convToBST(nums, 0, nums.length - 1);
-};
-
-// Create a function which will convert any particular range of given nums array...
-// & return its corresponding BST root node....
-var bestSolution1_convToBST = function (nums, beg, end) {
-  // If beg > end, return NULL, as we receive a wrong range...
-  if (beg > end) {
-    return null;
-  }
-  // set the middle node...
-  var mid = Math.ceil((beg + end) / 2);
-  // Initialise root node with value same as nums[mid]...
-  var root = new TreeNode(nums[mid]);
-  // Assign left subtrees as the same function called on left subranges...
-  root.left = bestSolution1_convToBST(nums, beg, mid - 1);
-  // Assign right subtrees as the same function called on right subranges...
-  root.right = bestSolution1_convToBST(nums, mid + 1, end);
-  // Return the root node...
-  return root;
-};
-
-// Best Solution 2: Intuitive
-var bestSolution2 = function (nums) {
-  if (!nums.length) {
+// Solution
+/**
+ * Divide-and-conquer
+ *
+ * Complexities:
+ *   N - Size of `nums`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(logᴺ)
+ */
+var solution = function (nums) {
+  if (!nums || nums.length === 0) {
     return null;
   }
 
-  const mid = Math.floor(nums.length / 2);
-  const root = new TreeNode(nums[mid]);
+  function buildBST(left, right) {
+    if (left > right) {
+      return null;
+    }
 
-  // subtrees are BSTs as well
-  root.left = sortedArrayToBST(nums.slice(0, mid));
-  root.right = sortedArrayToBST(nums.slice(mid + 1));
+    const mid = Math.floor((left + right) / 2);
 
-  return root;
+    const node = new TreeNode(nums[mid]);
+
+    node.left = buildBST(left, mid - 1);
+    node.right = buildBST(mid + 1, right);
+
+    return node;
+  }
+
+  return buildBST(0, nums.length - 1);
 };
