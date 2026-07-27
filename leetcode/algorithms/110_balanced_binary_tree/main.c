@@ -1,64 +1,84 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-struct TreeNode
-{
+struct TreeNode {
     int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
+    struct TreeNode* left;
+    struct TreeNode* right;
 };
 
-int getDepth(struct TreeNode *root)
-{
-    if (root)
-    {
-        int left = getDepth(root->left);
-        int right = getDepth(root->right);
-        return (left > right ? left : right) + 1;
+/**
+ * DFS
+ * 
+ * Complexities:
+ *   N - Number of `node`
+ *   H - Height of `node`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+int getMaxDepth(struct TreeNode* node) {
+    if (!node) {
+        return 0;
     }
-    return 0;
+
+    int left_depth = getMaxDepth(node->left);
+    if (left_depth < 0) {
+        return -1;
+    }
+
+    int right_depth = getMaxDepth(node->right);
+    if (right_depth < 0) {
+        return -1;
+    }
+
+    if (abs(left_depth - right_depth) > 1) {
+        return -1;
+    }
+
+    return (left_depth > right_depth ? left_depth : right_depth) + 1;
 }
 
-bool isBalanced(struct TreeNode *root)
-{
-    if (root)
-    {
-        int depth = getDepth(root->left) - getDepth(root->right);
-        if (depth < 0)
-        {
-            depth *= -1;
-        }
-        if (depth > 1)
-        {
-            return false;
-        }
-        if (!isBalanced(root->left) || !isBalanced(root->right))
-        {
-            return false;
-        }
-    }
-    return true;
+bool isBalanced(struct TreeNode* root) {
+  return getMaxDepth(root) != -1;
 }
 
 
-// Best Solution
-int bestSolution_maxdepth(struct TreeNode *root, int depth)
-{
-    if (depth < 0 || root == NULL)
-    {
-        return depth; // return depth if it reaches the end or it's already not balanced
-    }
-    int left = bestSolution_maxdepth(root->left, depth + 1);
-    int right = bestSolution_maxdepth(root->right, depth + 1);
-    depth = (left > right) ? left : right; // choose max depth
-    if (abs(left - right) > 1)
-    {
-        depth *= (-1); // not balanced, convert to negative value
-    }
-    return depth;
+// Solution
+/**
+ * DFS
+ * 
+ * Complexities:
+ *   N - Number of `node`
+ *   H - Height of `node`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+int max(int a, int b) {
+    return (a > b) ? a : b;
 }
 
-bool bestSolution(struct TreeNode *root)
-{
-    return bestSolution_maxdepth(root, 0) >= 0; // negative: not balanced, positive: balanced
+int checkHeight(struct TreeNode* node) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    int leftHeight = checkHeight(node->left);
+    if (leftHeight == -1) {
+        return -1;
+    }
+
+    int rightHeight = checkHeight(node->right);
+    if (rightHeight == -1) {
+        return -1;
+    }
+
+    if (abs(leftHeight - rightHeight) > 1) {
+        return -1;
+    }
+
+    return 1 + max(leftHeight, rightHeight);
+}
+
+bool solution(struct TreeNode* root) {
+    return checkHeight(root) != -1;
 }
