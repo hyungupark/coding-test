@@ -5,108 +5,85 @@ function TreeNode(val, left, right) {
 }
 
 /**
+ * DFS
+ *
+ * Complexities:
+ *   N - Number of `node`
+ *   H - Height of `node`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+/**
+ * @param {TreeNode} node
+ * @return {number}
+ */
+const getMaxDepth = (node) => {
+  if (node === null) {
+    return 0;
+  }
+
+  const leftDepth = getMaxDepth(node.left);
+  if (leftDepth < 0) {
+    return -1;
+  }
+
+  const rightDepth = getMaxDepth(node.right);
+  if (rightDepth < 0) {
+    return -1;
+  }
+
+  if (Math.abs(leftDepth - rightDepth) > 1) {
+    return -1;
+  }
+
+  return Math.max(leftDepth, rightDepth) + 1;
+};
+
+/**
  * @param {TreeNode} root
  * @return {boolean}
  */
 var isBalanced = function (root) {
-  return checkDepth(root) === -1 ? false : true;
+  return getMaxDepth(root) !== -1;
 };
 
+
+// Solution
 /**
- * @param {TreeNode} root_
- * @return {number}
+ * DFS
+ *
+ * Complexities:
+ *   N - Number of `node`
+ *   H - Height of `node`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
  */
-const checkDepth = (root_) => {
-  if (!root_) {
-    return 0;
-  }
-
-  const leftDepth = checkDepth(root_.left);
-  const rightDepth = checkDepth(root_.right);
-
-  if (leftDepth === -1 || rightDepth === -1) {
-    return -1;
-  }
-
-  if (leftDepth - rightDepth > 1 || rightDepth - leftDepth > 1) {
-    return -1;
-  }
-
-  if (leftDepth >= rightDepth) {
-    return leftDepth + 1;
-  } else {
-    return rightDepth + 1;
-  }
-};
-
-
-// Best Solution
-// Best Solution 1:
-var bestSolution1 = function (root) {
-  // If the tree is empty, we can say it’s balanced...
-  if (root == null) {
-    return true;
-  }
-  // Height Function will return -1, when it’s an unbalanced tree...
-  if (bestSolution1_height(root) == -1) {
-    return false;
-  }
-  return true;
-};
-
-// Create a function to return the “height” of a current subtree using recursion...
-var bestSolution1_height = function (root) {
-  // Base case...
-  if (root == null) {
-    return 0;
-  }
-  // Height of left subtree...
-  let leftHeight = bestSolution1_height(root.left);
-  // Height of height subtree...
-  let rightHight = bestSolution1_height(root.right);
-  // In case of left subtree or right subtree unbalanced, return -1...
-  if (leftHeight == -1 || rightHight == -1) {
-    return -1;
-  }
-  // If their heights differ by more than ‘1’, return -1...
-  if (Math.abs(leftHeight - rightHight) > 1) {
-    return -1;
-  }
-  // Otherwise, return the height of this subtree as max(leftHeight, rightHight) + 1...
-  return Math.max(leftHeight, rightHight) + 1;
-};
-
-// Best Solution 2: DFS (Postorder)
-var bestSolution2 = function (root) {
-  let dfs = function (node) {
-    if (!node) {
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var solution = function (root) {
+  function checkHeight(node) {
+    if (node === null) {
       return 0;
     }
-    let left = 1 + dfs(node.left);
-    let right = 1 + dfs(node.right);
-    if (Math.abs(left - right) > 1) {
-      return Infinity;
+
+    const leftHeight = checkHeight(node.left);
+    if (leftHeight === -1) {
+      return -1;
     }
-    return Math.max(left, right);
-  };
 
-  return dfs(root) == Infinity ? false : true;
-};
-
-// Best Solution 3: DFS (Top-Down recursion)
-var bestSolution3 = function (root) {
-  if (!root) return true;
-
-  let height = function (node) {
-    if (!node) {
-      return 0;
+    const rightHeight = checkHeight(node.right);
+    if (rightHeight === -1) {
+      return -1;
     }
-    return 1 + Math.max(height(node.left), height(node.right));
-  };
 
-  return (
-    Math.abs(height(root.left) - height(root.right)) < 2 &&
-    bestSolution3(root.left) &&
-    bestSolution3(root.right)
-  );
+    if (Math.abs(leftHeight - rightHeight) > 1) {
+      return -1;
+    }
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  return checkHeight(root) !== -1;
 };
