@@ -2,109 +2,114 @@
 #include <queue>
 using namespace std;
 
-class MinimumDepthOfBinaryTree
-{
-    struct TreeNode
-    {
+class MinimumDepthOfBinaryTree {
+    struct TreeNode {
         int val;
-        TreeNode *left;
-        TreeNode *right;
+        TreeNode* left;
+        TreeNode* right;
         TreeNode() : val(0), left(nullptr), right(nullptr) {}
         TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+        TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
     };
 
 public:
-    int minDepth(TreeNode *root)
-    {
-        if (!root)
-        {
+    /**
+     * Recursion: DFS
+     * 
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   H - Height of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    int minDepth(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
 
-        int left = minDepth(root->left);
-        int right = minDepth(root->right);
+        int left_depth = minDepth(root->left);
+        int right_depth = minDepth(root->right);
 
-        if (!left || !right)
-        {
-            return (left > right ? left : right) + 1;
+        if (left_depth == 0 || right_depth == 0) {
+            return max(left_depth, right_depth) + 1;
         }
 
-        return (left > right ? right : left) + 1;
+        return min(left_depth, right_depth) + 1;
     }
 
 
-    // Best Solution
-    // Best Solution 1:
-    int bestSolution1(TreeNode *root)
-    {
-        if (!root)
-        {
+    // Solution
+    /**
+     * Solution 1
+     *
+     * Iteration: BFS (Queue)
+     *
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   W - Width of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(W)
+     */
+    int solution1(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
-        int L = bestSolution1(root->left), R = bestSolution1(root->right);
-        return 1 + (min(L, R) ? min(L, R) : max(L, R));
-    }
 
-    // Best Solution 2:
-    int bestSolution2(TreeNode *root)
-    {
-        if (!root)
-        {
-            return 0;
-        }
-        int L = bestSolution2(root->left), R = bestSolution2(root->right);
-        return 1 + (L && R ? min(L, R) : max(L, R));
-    }
+        std::queue<TreeNode*> q;
+        q.push(root);
+        int depth = 1;
 
-    // Best Solution 3:
-    int bestSolution3(TreeNode *root)
-    {
-        if (!root)
-        {
-            return 0;
-        }
-        int L = bestSolution3(root->left), R = bestSolution3(root->right);
-        return 1 + (!L - !R ? max(L, R) : min(L, R));
-    }
+        while (!q.empty()) {
+            int levelSize = q.size();
 
-    // Best Solution 4:
-    int bestSolution4(TreeNode *root)
-    {
-        if (!root)
-        {
-            return 0;
-        }
-        int L = bestSolution4(root->left), R = bestSolution4(root->right);
-        return L < R && L || !R ? 1 + L : 1 + R;
-    }
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* curr = q.front();
+                q.pop();
 
-    // Best Solution 5: BFS
-    int bestSolution5(TreeNode *root)
-    {
-        if (root == NULL)
-        {
-            return 0;
-        }
-        queue<TreeNode *> Q;
-        Q.push(root);
-        int i = 0;
-        while (!Q.empty())
-        {
-            i++;
-            int k = Q.size();
-            for (int j = 0; j < k; j++)
-            {
-                TreeNode *rt = Q.front();
-                if (rt->left)
-                    Q.push(rt->left);
-                if (rt->right)
-                    Q.push(rt->right);
-                Q.pop();
-                if (rt->left == NULL && rt->right == NULL)
-                    return i;
+                if (curr->left == nullptr && curr->right == nullptr) {
+                    return depth;
+                }
+
+                if (curr->left != nullptr) {
+                    q.push(curr->left);
+                }
+                if (curr->right != nullptr) {
+                    q.push(curr->right);
+                }
             }
+            depth++;
         }
-        return -1; // For the compiler thing. The code never runs here.
+
+        return depth;
+    }
+
+    /**
+     * Solution 2
+     * 
+     * Recursion: DFS
+     * 
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   H - Height of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    int solution2(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        if (root->left == nullptr && root->right == nullptr) {
+            return 1;
+        }
+
+        if (root->left == nullptr) {
+            return 1 + solution2(root->right);
+        }
+        if (root->right == nullptr) {
+            return 1 + solution2(root->left);
+        }
+
+        return 1 + min(solution2(root->left), solution2(root->right));
     }
 };
