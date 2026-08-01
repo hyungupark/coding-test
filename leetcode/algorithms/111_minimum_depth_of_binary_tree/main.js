@@ -5,86 +5,71 @@ function TreeNode(val, left, right) {
 }
 
 /**
+ * Recursion: DFS
+ *
+ * Complexities:
+ *   N - Number of nodes in `root`
+ *   H - Width of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ *
  * @param {TreeNode} root
  * @return {number}
  */
 var minDepth = function (root) {
-  return getMinDepth(root);
+  if (root === null) {
+    return 0;
+  }
+
+  const leftDepth = minDepth(root.left);
+  const rightDepth = minDepth(root.right);
+
+  if (leftDepth === 0 || rightDepth === 0) {
+    return Math.max(leftDepth, rightDepth) + 1;
+  }
+
+  return Math.min(leftDepth, rightDepth) + 1;
 };
 
+
+// Solution
 /**
- * @param {number} depth_
- * @param {TreeNode} node_
+ * Solution 1
+ *
+ * Iteration: BFS (Queue)
+ *
+ * Complexities:
+ *   N - Number of nodes in `root`
+ *   W - Width of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(W)
+ *
+ * @param {TreeNode} root
  * @return {number}
  */
-const getMinDepth = (node_) => {
-  if (!node_) {
-    return 0;
-  }
-
-  if (!node_.left) {
-    return getMinDepth(node_.right) + 1;
-  }
-
-  if (!node_.right) {
-    return getMinDepth(node_.left) + 1;
-  }
-
-  return Math.min(getMinDepth(node_.left), getMinDepth(node_.right)) + 1;
-};
-
-
-// Best Solution
-// Best Solution 1
-var bestSolution1 = function (root) {
-  // Base case...
-  // If the subtree is empty i.e. root is NULL, return depth as 0...
-  if (root == null) {
-    return 0;
-  }
-
-  // If the both subtrees are empty...
-  if (root.left == null && root.right == null) {
-    return 1;
-  }
-
-  // If the left subtree is empty, return the depth of right subtree after adding 1 to it...
-  if (root.left == null) {
-    return bestSolution1(root.right) + 1;
-  }
-
-  // If the right subtree is empty, return the depth of left subtree after adding 1 to it...
-  if (root.right == null) {
-    return bestSolution1(root.left) + 1;
-  }
-
-  // When the two child function return its depth...
-  // Pick the minimum out of these two subtrees and return this value after adding 1 to it...
-  return Math.min(bestSolution1(root.left), bestSolution1(root.right)) + 1; // Adding 1 is the current node which is the parent of the two subtrees...
-};
-
-// Best Solution 2
-var bestSolution2 = function (root) {
+var solution1 = function (root) {
   if (!root) {
     return 0;
   }
+
+  const queue = [root];
   let depth = 1;
-  let queue = [root];
-  if (!root.left && !root.right) {
-    return depth;
-  }
 
   while (queue.length > 0) {
-    let queueLength = queue.length;
+    const levelSize = queue.length;
 
-    for (let i = 0; i < queueLength; i++) {
-      let node = queue.shift();
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift();
 
-      if (!node.left && !node.right) {
+      if (node.left === null && node.right === null) {
         return depth;
-      } else {
-        if (node.left) queue.push(node.left);
-        if (node.right) queue.push(node.right);
+      }
+
+      if (node.left) {
+        queue.push(node.left);
+      }
+      if (node.right) {
+        queue.push(node.right);
       }
     }
 
@@ -92,4 +77,34 @@ var bestSolution2 = function (root) {
   }
 
   return depth;
+};
+
+/**
+ * Solution 2
+ *
+ * Recursion: DFS
+ *
+ * Complexities:
+ *   N - Number of nodes in `root`
+ *   H - Height of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ *
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var solution2 = function (root) {
+  if (!root) {
+    return 0;
+  }
+
+  if (root.left === null) {
+    return solution2(root.right) + 1;
+  }
+
+  if (root.right === null) {
+    return solution2(root.left) + 1;
+  }
+
+  return Math.min(solution2(root.left), solution2(root.right)) + 1;
 };
