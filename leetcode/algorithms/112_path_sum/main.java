@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class PathSum {
   public class TreeNode {
@@ -20,74 +21,94 @@ class PathSum {
     }
   }
 
+  /**
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - Number of nodes in `root`
+   *   H - Height of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
   public boolean hasPathSum(TreeNode root, int targetSum) {
     if (root == null) {
       return false;
     }
+
     if (root.left == null && root.right == null) {
       return root.val == targetSum;
-    } else {
-      return (hasPathSum(root.left, targetSum - root.val) ||
-          hasPathSum(root.right, targetSum - root.val));
     }
+
+    return (hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val));
   }
 
 
-  // Best Solution
-  // Best Solution 1: Recursion
-  public boolean bestSolution1(TreeNode root, int sum) {
+  // Solution
+  /**
+   * Solution 1
+   *
+   * Recursion - DFS
+   *
+   * Complexities:
+   *   N - Number of nodes in `root`
+   *   H - Height of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public boolean solution1(TreeNode root, int targetSum) {
     if (root == null) {
       return false;
     }
 
-    if (root.left == null && root.right == null && sum - root.val == 0) {
-      return true;
+    if (root.left == null && root.right == null) {
+      return targetSum == root.val;
     }
 
-    return bestSolution1(root.left, sum - root.val) || bestSolution1(root.right, sum - root.val);
+    int remainingSum = targetSum - root.val;
+    return solution1(root.left, remainingSum) || solution1(root.right, remainingSum);
   }
 
-  // Best Solution 2: Iteration
-  public boolean bestSolution2(TreeNode root, int sum) {
-    // iteration method
+  /**
+   * Solution 2
+   *
+   * Iteration - BFS with Queue
+   *
+   * Complexities:
+   *   N - Number of nodes in `root`
+   *   H - Height of `root`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public boolean solution2(TreeNode root, int targetSum) {
     if (root == null) {
       return false;
     }
-    Stack<TreeNode> path = new Stack<>();
-    Stack<Integer> sub = new Stack<>();
-    path.push(root);
-    sub.push(root.val);
-    while (!path.isEmpty()) {
-      TreeNode temp = path.pop();
-      int tempVal = sub.pop();
-      if (temp.left == null && temp.right == null) {
-        if (tempVal == sum) {
-          return true;
-        }
-      } else {
-        if (temp.left != null) {
-          path.push(temp.left);
-          sub.push(temp.left.val + tempVal);
-        }
-        if (temp.right != null) {
-          path.push(temp.right);
-          sub.push(temp.right.val + tempVal);
-        }
+
+    Queue<TreeNode> nodeQueue = new LinkedList<>();
+    Queue<Integer> sumQueue = new LinkedList<>();
+
+    nodeQueue.offer(root);
+    sumQueue.offer(root.val);
+
+    while (!nodeQueue.isEmpty()) {
+      TreeNode currentNode = nodeQueue.poll();
+      int currentSum = sumQueue.poll();
+
+      if (currentNode.left == null && currentNode.right == null && currentSum == targetSum) {
+        return true;
+      }
+
+      if (currentNode.left != null) {
+        nodeQueue.offer(currentNode.left);
+        sumQueue.offer(currentSum + currentNode.left.val);
+      }
+
+      if (currentNode.right != null) {
+        nodeQueue.offer(currentNode.right);
+        sumQueue.offer(currentSum + currentNode.right.val);
       }
     }
-    return false;
-  }
 
-  // Best Solution 3: Recursion
-  public boolean bestSolution3(TreeNode root, int sum) {
-    // recursion method
-    if (root == null) {
-      return false;
-    }
-    if (root.left == null && root.right == null && root.val == sum) {
-      return true;
-    }
-    return (bestSolution3(root.left, sum - root.val) ||
-        bestSolution3(root.right, sum - root.val));
+    return false;
   }
 }
