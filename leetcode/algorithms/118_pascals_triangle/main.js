@@ -1,4 +1,12 @@
 /**
+ * DP
+ * 
+ * Complexities:
+ *   N - `numRows`
+ *   - Time Complexity: O(N²)
+ *   - Space Complexity: O(N²)
+ */
+/**
  * @param {number} numRows
  * @return {number[][]}
  */
@@ -18,71 +26,38 @@ var generate = function (numRows) {
   return result;
 };
 
-// Best Solution
-// Best Solution 1: Recursion
-var bestSolution1 = function (numRows) {
+
+// Solution
+/**
+ * DP
+ * 
+ * Complexities:
+ *   N - `numRows`
+ *   - Time Complexity: O(N²)
+ *   - Space Complexity: O(N²)
+ */
+/**
+ * @param {number} numRows
+ * @return {number[][]}
+ */
+var solution = function (numRows) {
   if (numRows === 0) {
     return [];
   }
-  if (numRows === 1) {
-    return [[1]];
-  }
 
-  let prevRows = bestSolution1(numRows - 1);
-  let newRow = new Array(numRows).fill(1);
-
-  for (let i = 1; i < numRows - 1; i++) {
-    newRow[i] = prevRows[numRows - 2][i - 1] + prevRows[numRows - 2][i];
-  }
-
-  prevRows.push(newRow);
-  return prevRows;
-};
-
-// Best Solution 2: Combinatorial Formula
-var bestSolution2 = function (numRows) {
-  let result = [];
-  if (numRows === 0) {
-    return result;
-  }
-
-  let firstRow = [1];
-  result.push(firstRow);
+  const triangle = [[1]];
 
   for (let i = 1; i < numRows; i++) {
-    let prevRow = result[i - 1];
-    let currentRow = [1];
+    const prevRow = triangle[i - 1];
+
+    const currentRow = new Array(i + 1).fill(1);
 
     for (let j = 1; j < i; j++) {
-      currentRow.push(prevRow[j - 1] + prevRow[j]);
+      currentRow[j] = prevRow[j - 1] + prevRow[j];
     }
 
-    currentRow.push(1);
-    result.push(currentRow);
+    triangle.push(currentRow);
   }
 
-  return result;
-};
-
-// Best Solution 3: Dynamic Programming with 1D Array
-var bestSolution3 = function (numRows) {
-  if (numRows === 0) {
-    return [];
-  }
-  if (numRows === 1) {
-    return [[1]];
-  }
-
-  let prevRows = generate(numRows - 1);
-  let prevRow = prevRows[prevRows.length - 1];
-  let currentRow = [1];
-
-  for (let i = 1; i < numRows - 1; i++) {
-    currentRow.push(prevRow[i - 1] + prevRow[i]);
-  }
-
-  currentRow.push(1);
-  prevRows.push(currentRow);
-
-  return prevRows;
+  return triangle;
 };
