@@ -1,24 +1,25 @@
 #include <vector>
 using namespace std;
 
-class PascalsTriangle2
-{
+class PascalsTriangleII {
 public:
-    vector<int> getRow(int rowIndex)
-    {
+    /**
+     * DP
+     *
+     * Complexities:
+     *   N - `rowIndex`
+     *   - Time Complexity: O(N²)
+     *   - Space Complexity: O(N)
+     */
+    vector<int> getRow(int rowIndex) {
         vector<vector<int>> result;
 
-        for (int i = 0; i <= rowIndex; i++)
-        {
+        for (int i = 0; i <= rowIndex; i++) {
             vector<int> row;
-            for (int j = 0; j <= i; j++)
-            {
-                if (j == 0 || j == i)
-                {
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
                     row.push_back(1);
-                }
-                else
-                {
+                } else {
                     row.push_back(result[i - 1][j - 1] + result[i - 1][j]);
                 }
             }
@@ -28,17 +29,52 @@ public:
         return result[rowIndex];
     }
 
-    // Best Solution
-    vector<int> bestSolution(int rowIndex)
-    {
-        vector<int> res(1, 1);
-        long long prev = 1;
-        for (int k = 1; k <= rowIndex; k++)
-        {
-            long long next_val = prev * (rowIndex - k + 1) / k;
-            res.push_back(next_val);
-            prev = next_val;
+
+    // Solution
+    /**
+     * Solution 1
+     *
+     * DP
+     *
+     * Complexities:
+     *   N - `rowIndex`
+     *   - Time Complexity: O(N²)
+     *   - Space Complexity: O(N)
+     */
+    vector<int> solution1(int rowIndex) {
+        vector<int> row(rowIndex + 1, 1);
+
+        for (int i = 2; i <= rowIndex; ++i) {
+            for (int j = i - 1; j >= 1; --j) {
+                row[j] = row[j] + row[j - 1];
+            }
         }
-        return res;
+
+        return row;
+    }
+
+    /**
+     * Solution 2
+     *
+     * Binomial Coefficient
+     *
+     * Complexities:
+     *   N - `rowIndex`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    vector<int> solution2(int rowIndex) {
+        vector<int> row(rowIndex + 1, 1);
+        
+        long long prev = 1; 
+
+        for (int k = 1; k < rowIndex; ++k) {
+            long long current = prev * (rowIndex - k + 1) / k;
+            
+            row[k] = static_cast<int>(current);
+            prev = current;
+        }
+
+        return row;
     }
 };
