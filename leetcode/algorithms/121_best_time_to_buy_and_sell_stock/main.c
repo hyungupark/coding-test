@@ -1,50 +1,56 @@
 #include <limits.h>
 
-int maxProfit(int *prices, int pricesSize)
-{
-    int minPrice = 10000;
-    int price = 0;
-    for (int i = 0; i < pricesSize; i++)
-    {
-        if (prices[i] < minPrice)
-        {
+/**
+ * Greedy
+ * 
+ * Complexities:
+ *   N - `pricesSize`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+int maxProfit(int* prices, int pricesSize) {
+    int profit = 0;
+    int minPrice = 100000;
+
+    for (int i = 0; i < pricesSize; i++) {
+        if (prices[i] < minPrice) {
             minPrice = prices[i];
         }
-        if (prices[i] - minPrice > price)
-        {
-            price = prices[i] - minPrice;
+
+        int diff = prices[i] - minPrice;
+        if (diff > profit) {
+            profit = diff;
         }
     }
-    return price;
+
+    return profit;
 }
 
-// Best Solution
-int bestSolution(int *prices, int pricesSize)
-{
-    int lsf = INT_MAX; // least so far
-    int op = 0;        // overall profit
-    int pist = 0;      // profit if sold today
 
-    for (int i = 0; i < pricesSize; i++)
-    {
-        // if we found new buy value which is more smaller then previous one
-        if (prices[i] < lsf)
-        {
-            // update our least so far
-            lsf = prices[i];
-        }
+// Solution
+/**
+ * Greedy
+ * 
+ * Complexities:
+ *   N - `pricesSize`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+int maxProfit(int* prices, int pricesSize) {
+    if (pricesSize < 2) {
+        return 0;
+    }
 
-        // calculating profit if sold today by, Buy - sell
-        pist = prices[i] - lsf;
+    int min_price = INT_MAX;
+    int max_profit = 0;
 
-        // if pist is more then our previous overall profit
-        if (op < pist)
-        {
-            // update overall profit
-            op = pist;
+    for (int i = 0; i < pricesSize; i++) {
+        if (prices[i] < min_price) {
+            min_price = prices[i];
+        } else if (prices[i] - min_price > max_profit) {
+            max_profit = prices[i] - min_price;
         }
     }
 
-    // return op
-    return op;
+    return max_profit;
 }
