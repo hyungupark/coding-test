@@ -1,47 +1,56 @@
-#include <limits.h>
+#include <algorithm>
+#include <limits>
 #include <vector>
 using namespace std;
 
-class BestTimeToBuyAndSellStock
-{
+class BestTimeToBuyAndSellStock {
 public:
-    int maxProfit(vector<int> &prices)
-    {
-        int minPrice = 10000;
-        int price = 0;
-        for (int i = 0; i < prices.size(); i++)
-        {
-            if (prices[i] < minPrice)
-            {
-                minPrice = prices[i];
+    /**
+     * Greedy
+     *
+     * Complexities:
+     *   N - Size of `prices`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int maxProfit(vector<int>& prices) {
+        int minPrice = 100000;
+        int profit = 0;
+
+        for (int& price : prices) {
+            if (price < minPrice) {
+                minPrice = price;
             }
-            if (prices[i] - minPrice > price)
-            {
-                price = prices[i] - minPrice;
+
+            int diff = price - minPrice;
+            if (diff > profit) {
+                profit = diff;
             }
         }
-        return price;
+
+        return profit;
     }
 
-    // Best Solution
-    int bestSolution(vector<int> &prices)
-    {
-        int lsf = INT_MAX;
-        int op = 0;
-        int pist = 0;
 
-        for (int i = 0; i < prices.size(); i++)
-        {
-            if (prices[i] < lsf)
-            {
-                lsf = prices[i];
-            }
-            pist = prices[i] - lsf;
-            if (op < pist)
-            {
-                op = pist;
-            }
+    // Solution
+    /**
+     * Greedy
+     *
+     * Complexities:
+     *   N - Size of `prices`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int solution(vector<int>& prices) {
+        int min_price = INT_MAX; 
+        int max_profit = 0;
+
+        for (int price : prices) {
+            min_price = min(min_price, price);
+            
+            max_profit = max(max_profit, price - min_price);
         }
-        return op;
+
+        return max_profit;
     }
 };
