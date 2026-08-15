@@ -1,29 +1,47 @@
 from typing import List
 
 
-class Solution:
+class BestTimeToBuyAndSellStock:
+    """
+    # Greedy
+    #
+    # Complexities:
+    #   N - Size of `prices`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
     def maxProfit(self, prices: List[int]) -> int:
-        buy = 0
-        profit = 0
+        minPrice: int = 100000
+        maxProfit: int = 0
 
-        for sell in range(1, len(prices)):
-            if prices[sell] > prices[buy]:
-                if prices[sell] - prices[buy] > profit:
-                    profit = prices[sell] - prices[buy]
-            else:
-                buy = sell
+        for price in prices:
+            if price < minPrice:
+                minPrice = price
 
-        return profit
+            profit: int = price - minPrice
+            if profit > maxProfit:
+                maxProfit = profit
 
-
-    # Best Solution
-    def bestSolution(self, prices: List[int]) -> int:
-        if not prices:
-            return 0
-
-        maxProfit = 0
-        minPurchase = prices[0]
-        for i in range(1, len(prices)):
-            maxProfit = max(maxProfit, prices[i] - minPurchase)
-            minPurchase = min(minPurchase, prices[i])
         return maxProfit
+
+
+    # Solution
+    """
+    # Greedy
+    #
+    # Complexities:
+    #   N - Size of `prices`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
+    def solution(self, prices: List[int]) -> int:
+        min_price = float('inf')
+        max_profit = 0
+
+        for price in prices:
+            if price < min_price:
+                min_price = price
+            elif price - min_price > max_profit:
+                max_profit = price - min_price
+
+        return max_profit
