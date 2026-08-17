@@ -1,32 +1,77 @@
 import re
 
 
-class Solution:
+class ValidPalindrome:
+    """
+    # Two-Pointers
+    #
+    # Complexities:
+    #   N - Size of `s`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
     def isPalindrome(self, s: str) -> bool:
-        s = re.sub("[^0-9a-zA-Z]+", "", s).lower()
-        for i in range(len(s)):
-            if i == len(s) - 1:
-                break
-            if s[i] != s[len(s) - 1 - i]:
+        left: int = 0
+        right: int = len(s) - 1
+
+        while left < right:
+            if not s[left].isalnum():
+                left += 1
+                continue
+
+            if not s[right].isalnum():
+                right -= 1
+                continue
+
+            if s[left].lower() != s[right].lower():
                 return False
+
+            left += 1
+            right -= 1
+
         return True
 
-    # Best Solution
-    # Solution 1: Two Lines
-    def bestSolution1(self, s: str) -> bool:
-        s = [i for i in s.lower() if i.isalnum()]
-        return s == s[::-1]
 
-    # Solution 2: O(1) space (two-pointer)
-    def bestSolution2(self, s: str) -> bool:
-        i, j = 0, len(s) - 1
-        while i < j:
-            a, b = s[i].lower(), s[j].lower()
-            if a.isalnum() and b.isalnum():
-                if a != b:
-                    return False
-                else:
-                    i, j = i + 1, j - 1
-                    continue
-            i, j = i + (not a.isalnum()), j - (not b.isalnum())
+    # Solution
+    """
+    # Solution 1
+    #
+    # Pythonic Way
+    #
+    # Complexities:
+    #   N - Size of `s`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
+    def solution1(self, s: str) -> bool:
+        filtered_chars = [char.lower() for char in s if char.isalnum()]
+
+        return filtered_chars == filtered_chars[::-1]
+
+    """
+    # Solution 2
+    #
+    # Two-Pointers
+    #
+    # Complexities:
+    #   N - Size of `s`
+    #   - Time Complexity: O(N)
+    #   - Space Complexity: O(1)
+    """
+    def solution2(self, s: str) -> bool:
+        left, right = 0, len(s) - 1
+
+        while left < right:
+            while left < right and not s[left].isalnum():
+                left += 1
+
+            while left < right and not s[right].isalnum():
+                right -= 1
+
+            if s[left].lower() != s[right].lower():
+                return False
+
+            left += 1
+            right -= 1
+
         return True
