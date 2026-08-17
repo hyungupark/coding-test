@@ -1,55 +1,101 @@
 class ValidPalindrome {
+  /*
+   * Two-Pointers
+   * 
+   * Complexities:
+   *   N - Size of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   bool isPalindrome(String s) {
-    int prefix = 0;
-    int suffix = s.length - 1;
-    final RegExp alphanumeric = RegExp(r'^[a-zA-Z0-9]$', caseSensitive: false);
+    int left = 0;
+    int right = s.length - 1;
 
-    while (prefix < suffix) {
-      if (!alphanumeric.hasMatch(s[prefix])) {
-        prefix++;
+    s = s.toLowerCase();
+
+    while (left < right) {
+      final int leftCodeUnit = s[left].codeUnitAt(0);
+      final int rightCodeUnit = s[right].codeUnitAt(0);
+      if (!(leftCodeUnit >= 48 && leftCodeUnit <= 57) &&
+          !(leftCodeUnit >= 97 && leftCodeUnit <= 122)) {
+        left++;
         continue;
       }
-      if (!alphanumeric.hasMatch(s[suffix])) {
-        suffix--;
+
+      if (!(rightCodeUnit >= 48 && rightCodeUnit <= 57) &&
+          !(rightCodeUnit >= 97 && rightCodeUnit <= 122)) {
+        right--;
         continue;
       }
-      if (!(s[prefix].toLowerCase() == s[suffix].toLowerCase())) {
+
+      if (s[left] != s[right]) {
         return false;
       }
-      prefix++;
-      suffix--;
+
+      left++;
+      right--;
     }
 
     return true;
   }
 
-  // Best Solution
-  bool bestSolution(String s) {
-    s = s.toLowerCase();
 
-    String bag = '';
-
-    for (int i = 0; i < s.length; i++) {
-      int a = s.codeUnitAt(i);
-      if ((a >= 48 && a < 58) || (a >= 97 && a <= 122)) {
-        bag += s[i];
-      }
-    }
-
-    int r = bag.length - 1;
-    bool pal = true;
-    if (bag.length <= 1) {
+  // Solution
+  /*
+   * Two-Pointers
+   * 
+   * Complexities:
+   *   N - Size of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  bool solution(String s) {
+    if (s.isEmpty) {
       return true;
-    } else {
-      for (int j = 0; j < (bag.length / 2).floor(); j++) {
-        if (bag[j] != bag[r]) {
-          pal = false;
-          break;
+    }
+
+    int left = 0;
+    int right = s.length - 1;
+
+    while (left < right) {
+      int leftCode = s.codeUnitAt(left);
+      while (left < right && !_isAlphanumeric(leftCode)) {
+        left++;
+        leftCode = s.codeUnitAt(left);
+      }
+
+      int rightCode = s.codeUnitAt(right);
+      while (left < right && !_isAlphanumeric(rightCode)) {
+        right--;
+        rightCode = s.codeUnitAt(right);
+      }
+
+      if (left < right) {
+        int leftLower = _toLowerCase(leftCode);
+        int rightLower = _toLowerCase(rightCode);
+
+        if (leftLower != rightLower) {
+          return false;
         }
-        r--;
+
+        left++;
+        right--;
       }
     }
 
-    return pal;
+    return true;
+  }
+
+  bool _isAlphanumeric(int code) {
+    return (code >= 48 && code <= 57) ||
+        (code >= 65 && code <= 90) ||
+        (code >= 97 && code <= 122);
+  }
+
+  int _toLowerCase(int code) {
+    if (code >= 65 && code <= 90) {
+      return code + 32;
+    }
+    return code;
   }
 }
