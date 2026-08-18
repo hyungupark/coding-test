@@ -1,49 +1,63 @@
+#include <functional> // std::bit_xor
+#include <numeric>    // std::accumulate
 #include <vector>
 using namespace std;
 
-class SingleNumber
-{
+class SingleNumber {
 public:
-    int singleNumber(vector<int> &nums)
-    {
+    /**
+     * Bit Manipulation
+     *
+     * Complexities:
+     *   N - Size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int singleNumber(vector<int>& nums) {
         int result = 0;
-        for (int i = 0; i < nums.size(); i++)
-        {
+
+        for (int i = 0; i < nums.size(); i++) {
             result = result ^ nums[i];
         }
+
         return result;
     }
 
-    // Best Solution 1: USING MAPS (NOT USING CONSTANT SPACE)
-    int bestSolution1(vector<int> &nums)
-    {
-        unordered_map<int, int> a;
-        for (auto x : nums)
-            a[x]++;
-        for (auto z : a)
-            if (z.second == 1)
-                return z.first;
-        return -1;
-    }
 
-    // Best Solution 2: USING SORTING (USING CONSTANT SPACE)
-    int bestSolution2(vector<int> &nums)
-    {
-        sort(nums.begin(), nums.end());
-        for (int i = 1; i < nums.size(); i += 2)
-        {
-            if (nums[i] != nums[i - 1])
-                return nums[i - 1];
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * XOR
+     *
+     * Complexities:
+     *   N - Size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int solution1(vector<int>& nums) {
+        int result = 0;
+
+        for (int num : nums) {
+            result ^= num;
         }
-        return nums[nums.size() - 1];
+
+        return result;
     }
 
-    // Best Solution 3: USING BITWISE XOR OPERATOR (USING CONSTANT SPACE)
-    int bestSolution3(vector<int> &nums)
-    {
-        int ans = 0;
-        for (auto x : nums)
-            ans ^= x;
-        return ans;
+    /**
+     * Solution 2
+     * 
+     * STL <numeric> - std::accumulate
+     * 
+     * XOR
+     *
+     * Complexities:
+     *   N - Size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    int solution2(vector<int>& nums) {
+        return accumulate(nums.begin(), nums.end(), 0, bit_xor<int>());
     }
 };
