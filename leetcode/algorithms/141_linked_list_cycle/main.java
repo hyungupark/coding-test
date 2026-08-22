@@ -1,22 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Definition for singly-linked list.
- * class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) {
- *         val = x;
- *         next = null;
- *     }
- * }
- */
-
 class LinkedListCycle {
-
   public class ListNode {
-
     int val;
     ListNode next;
 
@@ -26,26 +9,56 @@ class LinkedListCycle {
     }
   }
 
+  /**
+   * Floyd's Tortoise and Hare Algorithm (Two Pointers)
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   public boolean hasCycle(ListNode head) {
-    List<ListNode> stack = new ArrayList<ListNode>();
-    while (head != null) {
-      if (stack.indexOf(head) > -1) {
+    ListNode ahead = head;
+    ListNode behind = head;
+
+    while (ahead != null && ahead.next != null) {
+      ahead = ahead.next.next;
+      behind = behind.next;
+      if (ahead == behind) {
         return true;
       }
-      stack.add(head);
-      head = head.next;
     }
+
     return false;
   }
 
-  // Best Solution
-  public boolean bestSolution(ListNode head) {
-    ListNode slow = head, fast = head;
-    while (fast != null && fast.next != null) {
-      fast = fast.next.next;
-      slow = slow.next;
-      if (fast == slow) return true;
+
+  // Solution
+  /**
+   * Floyd's Tortoise and Hare Algorithm (Two Pointers)
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  public boolean solution(ListNode head) {
+    if (head == null || head.next == null) {
+      return false;
     }
+
+    ListNode slow = head;
+    ListNode fast = head;
+
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+
+      if (slow == fast) {
+        return true;
+      }
+    }
+
     return false;
   }
 }
