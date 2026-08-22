@@ -1,39 +1,65 @@
-/**
- * Definition for singly-linked list.
- * function ListNode(val) {
- *     this.val = val;
- *     this.next = null;
- * }
- */
-
 function ListNode(val) {
   this.val = val;
   this.next = null;
 }
 
 /**
+ * Floyd's Tortoise and Hare Algorithm (Two Pointers)
+ *
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
  * @param {ListNode} head
  * @return {boolean}
  */
 var hasCycle = function (head) {
-  const stack = [];
-  while (head) {
-    if (stack.indexOf(head) > -1) {
+  let ahead = head;
+  let behind = head;
+
+  while (ahead && ahead.next) {
+    ahead = ahead.next.next;
+    behind = behind.next;
+    if (ahead == behind) {
       return true;
     }
-    stack.push(head);
-    head = head.next;
   }
+
   return false;
 };
 
-// Best Solution
-const bestSolution = (head) => {
-  let fast = head;
-  while (fast && fast.next) {
-    head = head.next;
-    fast = fast.next.next;
-    if (head === fast) return true;
+
+// Solution
+/**
+ * Floyd's Tortoise and Hare Algorithm (Two Pointers)
+ *
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var solution = function (head) {
+  if (head === null || head.next === null) {
+    return false;
   }
+
+  let slow = head;
+  let fast = head;
+
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+
+    if (slow === fast) {
+      return true;
+    }
+  }
+
   return false;
 };
