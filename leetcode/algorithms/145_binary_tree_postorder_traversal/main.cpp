@@ -1,153 +1,106 @@
+#include <stack>
 #include <vector>
 using namespace std;
 
-struct TreeNode
-{
+struct TreeNode {
     int val;
-    TreeNode *left;
-    TreeNode *right;
+    TreeNode* left;
+    TreeNode* right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
-class BinaryTreePostorderTraversal
-{
+class BinaryTreePostorderTraversal {
 public:
-    void addVal(TreeNode *node, vector<int> &result)
-    {
-        if (node != nullptr)
-        {
+    /**
+     * Recursion
+     *
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   H - Height of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    void addVal(TreeNode* node, vector<int>& result) {
+        if (node != nullptr) {
             addVal(node->left, result);
             addVal(node->right, result);
             result.push_back(node->val);
         }
     }
 
-    vector<int> postorderTraversal(TreeNode *root)
-    {
+    vector<int> postorderTraversal(TreeNode* root) {
         vector<int> result;
         addVal(root, result);
         return result;
     }
 
-    // Best Solution 1: Iterative solution using stack
-    vector<int> bestSolution1(TreeNode *root)
-    {
-        vector<int> nodes;
-        stack<TreeNode *> todo;
-        TreeNode *last = NULL;
-        while (root || !todo.empty())
-        {
-            if (root)
-            {
-                todo.push(root);
-                root = root->left;
-            }
-            else
-            {
-                TreeNode *node = todo.top();
-                if (node->right && last != node->right)
-                {
-                    root = node->right;
-                }
-                else
-                {
-                    nodes.push_back(node->val);
-                    last = node;
-                    todo.pop();
-                }
-            }
-        }
-        return nodes;
-    }
 
-    // Best Solution 2: Recursive solution
-    vector<int> bestSolution2(TreeNode *root)
-    {
-        vector<int> nodes;
-        postorder(root, nodes);
-        return nodes;
-    }
-
-    void postorder(TreeNode *root, vector<int> &nodes)
-    {
-        if (!root)
-        {
+    // Solution
+    /**
+     * Solution 1
+     *
+     * Recursion
+     *
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   H - Height of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    void postorder(TreeNode* node, vector<int>& result) {
+        if (node == nullptr) {
             return;
         }
-        postorder(root->left, nodes);
-        postorder(root->right, nodes);
-        nodes.push_back(root->val);
+
+        postorder(node->left, result);
+        postorder(node->right, result);
+        result.push_back(node->val);
     }
 
-    // Best Solution 3: Morris traversal
-    vector<int> bestSolution3(TreeNode *root)
-    {
-        vector<int> nodes;
-        TreeNode *dummy = new TreeNode(0);
-        dummy->left = root;
-        TreeNode *cur = dummy;
-        while (cur)
-        {
-            if (cur->left)
-            {
-                TreeNode *pre = cur->left;
-                while (pre->right && (pre->right != cur))
-                {
-                    pre = pre->right;
-                }
-                if (!(pre->right))
-                {
-                    pre->right = cur;
-                    cur = cur->left;
-                }
-                else
-                {
-                    reverseAddNodes(cur->left, pre, nodes);
-                    pre->right = NULL;
-                    cur = cur->right;
-                }
-            }
-            else
-            {
-                cur = cur->right;
-            }
-        }
-        return nodes;
+    vector<int> solution1(TreeNode* root) {
+        vector<int> result;
+        postorder(root, result);
+        return result;
     }
 
-    void reverseNodes(TreeNode *start, TreeNode *end)
-    {
-        if (start == end)
-        {
-            return;
+    /**
+     * Solution 2
+     *
+     * Iteration
+     *
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   H - Height of `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(H)
+     */
+    vector<int> solution2(TreeNode* root) {
+        vector<int> result;
+        if (root == nullptr) {
+            return result;
         }
-        TreeNode *x = start;
-        TreeNode *y = start->right;
-        TreeNode *z;
-        while (x != end)
-        {
-            z = y->right;
-            y->right = x;
-            x = y;
-            y = z;
-        }
-    }
 
-    void reverseAddNodes(TreeNode *start, TreeNode *end, vector<int> &nodes)
-    {
-        reverseNodes(start, end);
-        TreeNode *node = end;
-        while (true)
-        {
-            nodes.push_back(node->val);
-            if (node == start)
-            {
-                break;
+        stack<TreeNode*> st;
+        st.push(root);
+
+        while (!st.empty()) {
+            TreeNode* curr = st.top();
+            st.pop();
+            
+            result.push_back(curr->val);
+
+            if (curr->left != nullptr) {
+                st.push(curr->left);
             }
-            node = node->right;
+            if (curr->right != nullptr) {
+                st.push(curr->right);
+            }
         }
-        reverseNodes(end, start);
+
+        reverse(result.begin(), result.end());
+
+        return result;
     }
 };
