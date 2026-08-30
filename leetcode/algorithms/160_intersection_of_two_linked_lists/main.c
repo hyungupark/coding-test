@@ -1,33 +1,58 @@
-struct ListNode
-{
+#include <stdlib.h>
+
+struct ListNode {
     int val;
-    struct ListNode *next;
+    struct ListNode* next;
 };
 
-struct ListNode *getIntersectionNode(struct ListNode *headA, struct ListNode *headB)
-{
-    while (headA != 0)
-    {
-        struct ListNode *temp = headB;
-        while (temp != 0)
-        {
-            if (temp == headA)
-                return temp;
-            temp = temp->next;
-        }
-        headA = headA->next;
+/**
+ * Two-Pointer
+ * 
+ * Complexities:
+ *   N - Number of Nodes in `headA`
+ *   M - Number of Nodes in `headB`
+ *   - Time Complexity: O(M + N)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* getIntersectionNode(struct ListNode* headA, struct ListNode* headB) {
+    if (headA == NULL || headB == NULL) {
+        return NULL;
     }
-    return 0;
+
+    struct ListNode* ptrA = headA;
+    struct ListNode* ptrB = headB;
+
+    while (ptrA != ptrB) {
+        ptrA = (ptrA == NULL) ? headB : ptrA->next;
+        ptrB = (ptrB == NULL) ? headA : ptrB->next;
+    }
+
+    return ptrA;
 }
 
-// Best Solution
-struct ListNode *bestSolution(struct ListNode *headA, struct ListNode *headB)
-{
-    struct ListNode *a = headA, *b = headB;
-    while (a != b)
-    {
-        a = !a ? headB : a->next;
-        b = !b ? headA : b->next;
+
+// Solution
+/**
+ * Two-Pointer
+ * 
+ * Complexities:
+ *   N - Number of Nodes in `headA`
+ *   M - Number of Nodes in `headB`
+ *   - Time Complexity: O(M + N)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* getIntersectionNode(struct ListNode* headA, struct ListNode* headB) {
+    if (headA == NULL || headB == NULL) {
+        return NULL;
     }
-    return a;
+
+    struct ListNode* ptrA = headA;
+    struct ListNode* ptrB = headB;
+
+    while (ptrA != ptrB) {
+        ptrA = (ptrA == NULL) ? headB : ptrA->next;
+        ptrB = (ptrB == NULL) ? headA : ptrB->next;
+    }
+
+    return ptrA;
 }
