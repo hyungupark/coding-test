@@ -1,11 +1,5 @@
 from typing import Optional
 
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
-
 
 class ListNode:
     def __init__(self, x):
@@ -13,42 +7,88 @@ class ListNode:
         self.next = None
 
 
-class Solution:
+class IntersectionOfTwoLinkedLists:
+    """
+    # Two-Pointer
+    #
+    # Complexities:
+    #   N - Number of Nodes in `headA`
+    #   M - Number of Nodes in `headB`
+    #   - Time Complexity: O(M + N)
+    #   - Space Complexity: O(1)
+    """
     def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
-        a = headA
-        b = headB
-        while a is not b:
-            if a is None:
-                a = headB
-            else:
-                a = a.next
-            if b is None:
-                b = headA
-            else:
-                b = b.next
-        return a
+        if not headA or not headB:
+            return None
+
+        ptrA, ptrB = headA, headB
+
+        while ptrA != ptrB:
+            ptrA = ptrA.next if ptrA else headB
+            ptrB = ptrB.next if ptrB else headA
+
+        return ptrA
 
 
-    # Best Solution
-    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
-        stackA = ["A"]
-        stackB = ["B"]
+    # Solution
+    """
+    # Solution 1
+    #
+    # Two-Pointer
+    #
+    # Complexities:
+    #   N - Number of Nodes in `headA`
+    #   M - Number of Nodes in `headB`
+    #   - Time Complexity: O(M + N)
+    #   - Space Complexity: O(1)
+    """
+    def solution1(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        if not headA or not headB:
+            return None
 
-        while headA or headB:
-            if headA:
-                stackA.append(headA)
-                headA = headA.next
+        pA, pB = headA, headB
 
-            if headB:
-                stackB.append(headB)
-                headB = headB.next
+        while pA != pB:
+            pA = pA.next if pA else headB
+            pB = pB.next if pB else headA
 
-        prev = None
-        while stackA and stackB:
-            nodeA = stackA.pop(-1)
-            nodeB = stackB.pop(-1)
+        return pA
 
-            if nodeA != nodeB:
-                return prev
+    """
+    # Solution 2
+    #
+    # Length Difference
+    #
+    # Complexities:
+    #   N - Number of Nodes in `headA`
+    #   M - Number of Nodes in `headB`
+    #   - Time Complexity: O(M + N)
+    #   - Space Complexity: O(1)
+    """
+    def solution2(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        def get_length(node: ListNode) -> int:
+            length = 0
+            while node:
+                length += 1
+                node = node.next
+            return length
 
-            prev = nodeA
+        lenA = get_length(headA)
+        lenB = get_length(headB)
+
+        pA, pB = headA, headB
+
+        if lenA > lenB:
+            for _ in range(lenA - lenB):
+                pA = pA.next
+        else:
+            for _ in range(lenB - lenA):
+                pB = pB.next
+
+        while pA and pB:
+            if pA == pB:
+                return pA
+            pA = pA.next
+            pB = pB.next
+
+        return None
