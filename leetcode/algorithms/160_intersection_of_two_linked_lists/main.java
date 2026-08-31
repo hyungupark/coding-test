@@ -1,19 +1,5 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) {
- *         val = x;
- *         next = null;
- *     }
- * }
- */
-
 class IntersectionOfTwoLinkedLists {
-
   public class ListNode {
-
     int val;
     ListNode next;
 
@@ -23,31 +9,55 @@ class IntersectionOfTwoLinkedLists {
     }
   }
 
+  /**
+   * Two-Pointer
+   *
+   * Complexities:
+   *   N - Number of Nodes in `headA`
+   *   M - Number of Nodes in `headB`
+   *   - Time Complexity: O(M + N)
+   *   - Space Complexity: O(1)
+   */
   public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    ListNode a = headA;
-    ListNode b = headB;
-    while (a != b) {
-      a = a == null ? headB : a.next;
-      b = b == null ? headA : b.next;
+    if (headA == null || headB == null) {
+      return null;
     }
-    return a;
+
+    ListNode ptrA = headA;
+    ListNode ptrB = headB;
+
+    while (ptrA != ptrB) {
+      ptrA = (ptrA == null) ? headB : ptrA.next;
+      ptrB = (ptrB == null) ? headA : ptrB.next;
+    }
+
+    return ptrA;
   }
 
-  // Best Solution
-  public ListNode bestSolution(ListNode headA, ListNode headB) {
-    // boundary check
-    if (headA == null || headB == null) return null;
 
-    ListNode a = headA;
-    ListNode b = headB;
-
-    // if a & b have different len, then we will stop the loop after second iteration
-    while (a != b) {
-      // for the end of first iteration, we just reset the pointer to the head of another linkedlist
-      a = a == null ? headB : a.next;
-      b = b == null ? headA : b.next;
+  // Solution
+  /**
+   * Two-Pointer
+   *
+   * Complexities:
+   *   N - Number of Nodes in `headA`
+   *   M - Number of Nodes in `headB`
+   *   - Time Complexity: O(M + N)
+   *   - Space Complexity: O(1)
+   */
+  public ListNode solution(ListNode headA, ListNode headB) {
+    if (headA == null || headB == null) {
+      return null;
     }
 
-    return a;
+    ListNode ptrA = headA;
+    ListNode ptrB = headB;
+
+    while (ptrA != ptrB) {
+      ptrA = (ptrA == null) ? headB : ptrA.next;
+      ptrB = (ptrB == null) ? headA : ptrB.next;
+    }
+
+    return ptrA;
   }
 }
