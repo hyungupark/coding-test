@@ -1,38 +1,44 @@
 /**
+ * Complexities:
+ *   N - `columnNumber`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(logᴺ)
+ */
+/**
  * @param {number} columnNumber
  * @return {string}
  */
 var convertToTitle = function (columnNumber) {
   const alphabet = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
   ];
 
-  let result = '';
+  let result = "";
 
   while (columnNumber > 0) {
     result = alphabet[(columnNumber - 1) % 26] + result;
@@ -42,19 +48,31 @@ var convertToTitle = function (columnNumber) {
   return result;
 };
 
-// Best Solution
-var bestSolution = function (n) {
-  if (n == 0) return null;
-  let result = '';
-  while (n > 0) {
-    let r = n % 26;
-    let d = parseInt(n / 26);
-    if (r == 0) {
-      r = 26;
-      d = d - 1;
-    }
-    result += String.fromCharCode(64 + r);
-    n = d;
+
+// Solution
+/**
+ * Complexities:
+ *   N - `columnNumber`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(logᴺ)
+ */
+/**
+ * @param {number} columnNumber
+ * @return {string}
+ */
+var solution = function (n) {
+  const result = [];
+
+  while (columnNumber > 0) {
+    columnNumber--;
+
+    const remainder = columnNumber % 26;
+
+    const char = String.fromCharCode(remainder + 65);
+    result.push(char);
+
+    columnNumber = Math.floor(columnNumber / 26);
   }
-  return result.split('').reverse().join('');
+
+  return result.reverse().join("");
 };
