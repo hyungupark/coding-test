@@ -1,32 +1,36 @@
 #include <stdbool.h>
 
-int sum(int n)
-{
+/**
+ * Floyd's Cycle-Finding Algorithm
+ * 
+ * Complexities:
+ *   N - `n`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(1)
+ */
+int sum(int n) {
     int sum = 0;
-    while (n)
-    {
+
+    while (n) {
         sum += (n % 10) * (n % 10);
         n /= 10;
     }
+
     return sum;
 }
 
-bool isHappy(int n)
-{
+bool isHappy(int n) {
     int fast = n;
     int slow = n;
 
-    while (true)
-    {
+    while (true) {
         slow = sum(slow);
         fast = sum(fast);
         fast = sum(fast);
-        if (fast == 1)
-        {
+        if (fast == 1) {
             break;
         }
-        if (slow == fast)
-        {
+        if (slow == fast) {
             return false;
         }
     }
@@ -34,51 +38,36 @@ bool isHappy(int n)
     return true;
 }
 
-// Best Solution 1
-int digitSquareSum(int n)
-{
-    int sum = 0, tmp;
-    while (n)
-    {
-        tmp = n % 10;
-        sum += tmp * tmp;
+
+// Solution
+/**
+ * Floyd's Cycle-Finding Algorithm
+ * 
+ * Complexities:
+ *   N - `n`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(1)
+ */
+int getNext(int n) {
+    int sum = 0;
+
+    while (n > 0) {
+        int digit = n % 10;
+        sum += digit * digit;
         n /= 10;
     }
+
     return sum;
 }
 
-bool bestSolution1(int n)
-{
-    int slow, fast;
-    slow = fast = n;
-    do
-    {
-        slow = digitSquareSum(slow);
-        fast = digitSquareSum(fast);
-        fast = digitSquareSum(fast);
-    } while (slow != fast);
-    if (slow == 1)
-        return 1;
-    else
-        return 0;
-}
+bool isHappy(int n) {
+    int slow = n;
+    int fast = getNext(n);
 
-// Best Solution 2
-bool bestSolution2(int n)
-{
-    int total = 0;
-    while (true)
-    {
-        while (n > 0)
-        {
-            total += (n % 10) * (n % 10);
-            n /= 10;
-        }
-        if (total == 1)
-            return true;
-        else if (total == 4)
-            return false;
-        n = total;
-        total = 0;
+    while (fast != 1 && slow != fast) {
+        slow = getNext(slow);
+        fast = getNext(getNext(fast));
     }
+
+    return fast == 1;
 }
