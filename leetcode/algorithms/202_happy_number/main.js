@@ -1,60 +1,116 @@
 /**
+ * Hash Set
+ *
+ * Complexities:
+ *   N - `n`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(logᴺ)
+ */
+/**
  * @param {number} n
  * @return {boolean}
  */
 var isHappy = function (n) {
   const set = {};
+
   while (n > 1) {
     let nString = n.toString();
     if (set[nString]) {
       return false;
     }
     set[nString] = true;
-    n = nString.split('').reduce((total_, current_) => {
+    n = nString.split("").reduce((total_, current_) => {
       return parseInt(total_) + Math.pow(parseInt(current_), 2);
     }, 0);
     if (n === 1) {
       return true;
     }
   }
+
   return n === 1;
 };
 
-// Best Solution
-var bestSolution1 = function (n) {
-  var seen = {};
-  while (n !== 1 && !seen[n]) {
-    seen[n] = true;
-    n = sumOfSquares(n);
-  }
-  return n === 1 ? true : false;
-};
 
-function sumOfSquares(numString) {
-  return numString
-    .toString()
-    .split('')
-    .reduce(function (sum, num) {
-      return sum + Math.pow(num, 2);
-    }, 0);
+// Solution
+/**
+ * Solution 1
+ *
+ * Floyd's Cycle-Finding Algorithm
+ *
+ * Complexities:
+ *   N - `n`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {number} n
+ * @return {number}
+ */
+function getNext1(n) {
+  let totalSum = 0;
+
+  while (n > 0) {
+    const digit = n % 10;
+    totalSum += digit * digit;
+    n = Math.floor(n / 10);
+  }
+
+  return totalSum;
 }
 
-var bestSolution2 = function (n) {
-  if (n < 10) {
-    if (n === 1 || n === 7) {
-      return true;
-    }
-    return false;
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var solution1 = function (n) {
+  const seen = new Set();
+
+  while (n !== 1 && !seen.has(n)) {
+    seen.add(n);
+    n = getNext1(n);
   }
-  let total = 0;
+
+  return n === 1;
+};
+
+/**
+ * Solution 2
+ *
+ * Hash Set
+ *
+ * Complexities:
+ *   N - `n`
+ *   - Time Complexity: O(logᴺ)
+ *   - Space Complexity: O(logᴺ)
+ */
+/**
+ * @param {number} n
+ * @return {number}
+ */
+function getNext2(n) {
+  let totalSum = 0;
+
   while (n > 0) {
-    let sq = n % 10;
-    total += sq ** 2;
-    n -= sq;
-    n /= 10;
+    const digit = n % 10;
+    totalSum += digit * digit;
+    n = Math.floor(n / 10);
   }
-  if (total === 1) {
-    return true;
+
+  return totalSum;
+}
+
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var solution2 = function (n) {
+  let slow = n;
+  let fast = getNext2(n);
+
+  while (fast !== 1 && slow !== fast) {
+    slow = getNext2(slow);
+    fast = getNext2(getNext2(fast));
   }
-  return isHappy(total);
+
+  return fast === 1;
 };
