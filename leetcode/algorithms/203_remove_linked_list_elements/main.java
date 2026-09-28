@@ -1,22 +1,10 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
-
 class RemoveLinkedListElements {
-
   public class ListNode {
-
     int val;
     ListNode next;
 
-    ListNode() {}
+    ListNode() {
+    }
 
     ListNode(int val) {
       this.val = val;
@@ -28,6 +16,14 @@ class RemoveLinkedListElements {
     }
   }
 
+  /**
+   * Dummy Node
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   public ListNode removeElements(ListNode head, int val) {
     if (head == null) {
       return null;
@@ -51,27 +47,52 @@ class RemoveLinkedListElements {
     return returnHead.next;
   }
 
-  // Best Solution
-  // best solution 1
-  public ListNode bestSolution1(ListNode head, int val) {
-    if (head == null) return null;
-    head.next = removeElements(head.next, val);
-    return head.val == val ? head.next : head;
+
+  // Solution
+  /**
+   * Solution 1
+   * 
+   * Dummy Node
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  public ListNode solution1(ListNode head, int val) {
+    ListNode dummy = new ListNode(-1);
+    dummy.next = head;
+
+    ListNode curr = dummy;
+
+    while (curr.next != null) {
+      if (curr.next.val == val) {
+        curr.next = curr.next.next;
+      } else {
+        curr = curr.next;
+      }
+    }
+
+    return dummy.next;
   }
 
-  // best solution 2
-  public ListNode bestSolution2(ListNode head, int val) {
-    ListNode fakeHead = new ListNode(-1);
-    fakeHead.next = head;
-    ListNode curr = head, prev = fakeHead;
-    while (curr != null) {
-      if (curr.val == val) {
-        prev.next = curr.next;
-      } else {
-        prev = prev.next;
-      }
-      curr = curr.next;
+  /**
+   * Solution 2
+   * 
+   * Recursion
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public ListNode solution2(ListNode head, int val) {
+    if (head == null) {
+      return null;
     }
-    return fakeHead.next;
+
+    head.next = solution2(head.next, val);
+
+    return head.val == val ? head.next : head;
   }
 }
