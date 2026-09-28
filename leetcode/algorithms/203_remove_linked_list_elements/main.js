@@ -1,16 +1,16 @@
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-
 function ListNode(val, next) {
   this.val = val === undefined ? 0 : val;
   this.next = next === undefined ? null : next;
 }
 
+/**
+ * Dummy Node
+ *
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
 /**
  * @param {ListNode} head
  * @param {number} val
@@ -23,7 +23,7 @@ var removeElements = function (head, val) {
 
   let currentHead = head;
   let nextHead = head.next;
-  
+
   while (nextHead) {
     if (nextHead.val === val) {
       nextHead = nextHead.next;
@@ -41,27 +41,33 @@ var removeElements = function (head, val) {
   return head;
 };
 
-// Best Solution
-var bestSolution = function (head, val) {
-  if (!head) return head;
 
-  // if head is the value were deleting and if there is any repetition lets handle that case first otherwise we'll just break out of the loop
-  while (head) {
-    if (head.val === val) {
-      head = head.next;
+// Solution
+/**
+ * Dummy Node
+ *
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var solution = function (head, val) {
+  const dummy = new ListNode(0, head);
+
+  let current = dummy;
+
+  while (current.next !== null) {
+    if (current.next.val === val) {
+      current.next = current.next.next;
     } else {
-      break;
+      current = current.next;
     }
   }
 
-  // skip any nodes whos values match the parameters and set it to the node after
-  // if the node is found, set curr.next to the node after it then try again
-  // otherwise iterate forward
-  let curr = head;
-  while (curr && curr.next) {
-    if (curr.next.val === val) curr.next = curr.next.next;
-    else curr = curr.next;
-  }
-
-  return head;
+  return dummy.next;
 };
