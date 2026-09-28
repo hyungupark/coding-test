@@ -1,22 +1,25 @@
 #include <stdlib.h>
 
-struct ListNode
-{
+struct ListNode {
     int val;
-    struct ListNode *next;
+    struct ListNode* next;
 };
 
-struct ListNode *removeElements(struct ListNode *head, int val)
-{
-    struct ListNode *result = (struct ListNode *)malloc(sizeof(struct ListNode));
+/**
+ * Dummy Node
+ * 
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    struct ListNode* result = (struct ListNode*)malloc(sizeof(struct ListNode));
     result->next = head;
+    struct ListNode* current = result;
 
-    struct ListNode *current = result;
-
-    while (current->next)
-    {
-        if (current->next->val == val)
-        {
+    while (current->next) {
+        if (current->next->val == val) {
             current->next = current->next->next;
             continue;
         }
@@ -26,18 +29,33 @@ struct ListNode *removeElements(struct ListNode *head, int val)
     return result->next;
 }
 
-// Best Solution
-struct ListNode *bestSolution(struct ListNode *head, int val)
-{
-    struct ListNode *temp = (struct ListNode *)malloc(sizeof(struct ListNode));
-    temp->next = head;
-    struct ListNode *curr = temp;
-    while (curr->next != NULL)
-    {
-        if (curr->next->val == val)
+
+// Solution
+/**
+ * Dummy Node
+ * 
+ * Complexities:
+ *   N - Number of nodes in `head`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+struct ListNode* solution(struct ListNode* head, int val) {
+    struct ListNode dummy;
+    dummy.next = head;
+
+    struct ListNode* curr = &dummy;
+
+    while (curr->next != NULL) {
+        if (curr->next->val == val) {
+            struct ListNode* temp = curr->next;
+            
             curr->next = curr->next->next;
-        else
+            
+            free(temp);
+        } else {
             curr = curr->next;
+        }
     }
-    return temp->next;
+
+    return dummy.next;
 }
