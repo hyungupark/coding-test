@@ -5,6 +5,14 @@ class ListNode {
 }
 
 class RemovrlinkedListElements {
+  /**
+   * Dummy Node
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   ListNode? removeElements(ListNode? head, int val) {
     ListNode? result = ListNode();
     result.next = head;
@@ -21,11 +29,30 @@ class RemovrlinkedListElements {
     return result.next;
   }
 
-  // Best Solution
-  ListNode? bestSolution(ListNode? head, int val) {
-    if (head == null) return null;
-    if (head.next != null) head.next = removeElements(head.next, val);
-    if (head.val == val) head = head.next;
-    return head;
+
+  // Solution
+  /**
+   * Dummy Node
+   *
+   * Complexities:
+   *   N - Number of nodes in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  ListNode? solution(ListNode? head, int val) {
+    ListNode dummy = ListNode(0, head);
+    ListNode current = dummy;
+
+    while (current.next != null) {
+      ListNode nextNode = current.next!;
+
+      if (nextNode.val == val) {
+        current.next = nextNode.next;
+      } else {
+        current = nextNode;
+      }
+    }
+
+    return dummy.next;
   }
 }
