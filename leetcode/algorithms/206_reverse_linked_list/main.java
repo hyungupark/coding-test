@@ -1,17 +1,7 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
+import java.util.Stack;
 
 class ReverseLinkedList {
   class ListNode {
-
     int val;
     ListNode next;
 
@@ -28,45 +18,84 @@ class ReverseLinkedList {
     }
   }
 
+  /**
+   * Iteration
+   *
+   * Complexities:
+   *   N - Number of node in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   public ListNode reverseList(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+
+    Stack<ListNode> stack = new Stack<>();
+
+    while (head != null) {
+      stack.push(head);
+      head = head.next;
+    }
+
+    ListNode newHead = stack.pop();
+    ListNode currHead = newHead;
+
+    while (!stack.empty()) {
+      currHead.next = stack.pop();
+      currHead = currHead.next;
+    }
+
+    currHead.next = null;
+
+    return newHead;
+  }
+
+  // Solution
+  /**
+   * Solution 1
+   *
+   * Iteration
+   *
+   * Complexities:
+   *   N - Number of node in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  public ListNode solution1(ListNode head) {
     ListNode prev = null;
     ListNode current = head;
 
     while (current != null) {
-      ListNode next = current.next;
+      ListNode nextTemp = current.next;
       current.next = prev;
       prev = current;
-      current = next;
+      current = nextTemp;
     }
 
     return prev;
   }
 
-
-  // Best Solution
-  // iterative solution
-  public ListNode bestSolution1(ListNode head) {
-    ListNode newHead = null;
-    while (head != null) {
-      ListNode next = head.next;
-      head.next = newHead;
-      newHead = head;
-      head = next;
+  /**
+   * Solution 2
+   *
+   * Recursion
+   *
+   * Complexities:
+   *   N - Number of node in `head`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  public ListNode solution2(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
     }
+
+    ListNode newHead = solution2(head.next);
+
+    head.next.next = head;
+    head.next = null;
+
     return newHead;
-  }
-
-  // recursive solution
-  public ListNode bestSolution2(ListNode head) {
-    /* recursive solution */
-    return reverseListInt(head, null);
-  }
-
-  private ListNode reverseListInt(ListNode head, ListNode newHead) {
-    if (head == null)
-      return newHead;
-    ListNode next = head.next;
-    head.next = newHead;
-    return reverseListInt(next, head);
   }
 }
