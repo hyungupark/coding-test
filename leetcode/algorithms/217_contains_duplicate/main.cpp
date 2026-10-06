@@ -1,98 +1,78 @@
 #include <set>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 
-class ContainsDuplicate
-{
+class ContainsDuplicate {
 public:
-    bool containsDuplicate(vector<int> &nums)
-    {
-        for (int i = 0; i < nums.size(); i++)
-        {
-            for (int j = i + 1; j < nums.size(); j++)
-            {
-                if (nums[i] == nums[j])
-                {
-                    return true;
-                }
+    /**
+     * Set
+     * 
+     * Complexities:
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    bool containsDuplicate(vector<int> &nums) {
+        set<int> s;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (s.count(nums[i]) > 0) {
+                return true;
+            } else {
+                s.insert(nums[i]);
             }
         }
+
         return false;
     }
 
-    // Best Solution 1: Brute Force
-    bool bestSolution1(vector<int> &nums)
-    {
-        bool flag = false;
-        for (int i = 0; i < nums.size(); i++)
-        {
-            for (int j = i + 1; j < nums.size(); j++)
-            {
-                if (nums[i] == nums[j])
-                {
-                    return true;
-                }
+
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * unordered_set
+     * 
+     * Complexities:
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    bool solution1(vector<int> &nums) {
+        unordered_set<int> seen;
+
+        for (int num : nums) {
+            if (seen.count(num)) {
+                return true;
             }
+            seen.insert(num);
         }
-        return flag;
+
+        return false;
+        // return unordered_set<int>(nums.begin(), nums.end()).size() < nums.size();
     }
 
-    // Best Solution 2: Sort
-    bool bestSolution2(vector<int> &nums)
-    {
+    /**
+     * Solution 2
+     * 
+     * Sort
+     * 
+     * Complexities:
+     *   - Time Complexity: O(N * logᴺ)
+     *   - Space Complexity: O(1)
+     */
+    bool solution2(vector<int> &nums) {
+        if (nums.size() <= 1) {
+            return false;
+        }
+
         sort(nums.begin(), nums.end());
-        bool flag = false;
-        for (int i = 0; i < nums.size() - 1; i++)
-        {
-            if (nums[i] == nums[i + 1])
-            {
+
+        for (size_t i = 0; i < nums.size() - 1; ++i) {
+            if (nums[i] == nums[i + 1]) {
                 return true;
             }
         }
-        return flag;
-    }
 
-    // Best Solution 3: Set
-    bool bestSolution3(vector<int> &nums)
-    {
-        return nums.size() > set<int>(nums.begin(), nums.end()).size();
-    }
-
-    // Best Solution 4: Map
-    bool bestSolution4(vector<int> &nums)
-    {
-        map<int, int> mp;
-        for (auto i : nums)
-        {
-            mp[i]++;
-        }
-        bool flag = false;
-        for (auto i : mp)
-        {
-            if (i.second >= 2)
-            {
-                return true;
-            }
-        }
-        return flag;
-    }
-
-    // Best Solution 5: HashMap
-    bool bestSolution5(vector<int> &nums)
-    {
-        unordered_map<int, int> mp;
-        for (auto i : nums)
-        {
-            mp[i]++;
-        }
-        bool flag = false;
-        for (auto i : mp)
-        {
-            if (i.second >= 2)
-            {
-                return true;
-            }
-        }
-        return flag;
+        return false;
     }
 };
