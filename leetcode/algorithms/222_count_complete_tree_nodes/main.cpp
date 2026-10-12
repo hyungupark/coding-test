@@ -1,63 +1,81 @@
-struct TreeNode
-{
+#include <cmath>
+using namespace std;
+
+struct TreeNode {
     int val;
-    TreeNode *left;
-    TreeNode *right;
+    TreeNode* left;
+    TreeNode* right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
-class CountCompleteTreeNodes
-{
+class CountCompleteTreeNodes {
 public:
-    int countNodes(TreeNode *root)
-    {
+    /**
+     * DFS
+     * 
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(logᴺ)
+     */
+    int countNodes(TreeNode* root) {
         int count = 0;
-        if (root)
-        {
+
+        if (root) {
             count++;
-            if (root->left)
-            {
+            if (root->left) {
                 count += countNodes(root->left);
             }
-            if (root->right)
-            {
+            if (root->right) {
                 count += countNodes(root->right);
             }
         }
+
         return count;
     }
 
-    // Best Solution
-    int bestSolution(TreeNode *root)
-    {
-        if (!root)
-        {
+
+    // Solution
+    /**
+     * Perfect Binary Tree
+     * 
+     * Complexities:
+     *   N - Number of nodes in `root`
+     *   - Time Complexity: O(log₂ᴺ)
+     *   - Space Complexity: O(logᴺ)
+     */
+    int getLeftHeight(TreeNode* node) {
+        int height = 0;
+        while (node != nullptr) {
+            height++;
+            node = node->left;
+        }
+        return height;
+    }
+
+    int getRightHeight(TreeNode* node) {
+        int height = 0;
+        while (node != nullptr) {
+            height++;
+            node = node->right;
+        }
+        return height;
+    }
+
+    int solution(TreeNode* root) {
+        if (root == nullptr) {
             return 0;
         }
 
-        int hl = 0, hr = 0;
+        int lh = getLeftHeight(root);
+        int rh = getRightHeight(root);
 
-        TreeNode *l = root, *r = root;
-
-        while (l)
-        {
-            hl++;
-            l = l->left;
+        if (lh == rh) {
+            return (1 << lh) - 1;
         }
 
-        while (r)
-        {
-            hr++;
-            r = r->right;
-        }
-
-        if (hl == hr)
-        {
-            return pow(2, hl) - 1;
-        }
-
-        return 1 + countNodes(root->left) + countNodes(root->right);
+        return 1 + solution(root->left) + solution(root->right);
     }
 };
