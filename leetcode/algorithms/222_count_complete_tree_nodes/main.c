@@ -1,38 +1,74 @@
-#include <cstddef>
+#include <stddef.h>
 
-struct TreeNode
-{
+struct TreeNode {
     int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
+    struct TreeNode* left;
+    struct TreeNode* right;
 };
 
-int countNodes(struct TreeNode *root)
-{
+/**
+ * DFS
+ * 
+ * Complexities:
+ *   N - Number of nodes in `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(logᴺ)
+ */
+int countNodes(struct TreeNode* root) {
     int count = 0;
-    if (root)
-    {
+
+    if (root) {
         count++;
-        if (root->left)
-        {
+        if (root->left) {
             count += countNodes(root->left);
         }
-        if (root->right)
-        {
+        if (root->right) {
             count += countNodes(root->right);
         }
     }
+
     return count;
 }
 
-// Best Solution
-int bestSolution(struct TreeNode *root)
-{
-    if (root == NULL)
-    {
+
+// Solution
+/**
+ * Perfect Binary Tree
+ * 
+ * Complexities:
+ *   N - Number of nodes in `root`
+ *   - Time Complexity: O(log₂ᴺ)
+ *   - Space Complexity: O(logᴺ)
+ */
+int getLeftHeight(struct TreeNode* node) {
+    int height = 0;
+    while (node != NULL) {
+        height++;
+        node = node->left;
+    }
+    return height;
+}
+
+int getRightHeight(struct TreeNode* node) {
+    int height = 0;
+    while (node != NULL) {
+        height++;
+        node = node->right;
+    }
+    return height;
+}
+
+int solution(struct TreeNode* root) {
+    if (root == NULL) {
         return 0;
     }
-    int a = bestSolution(root->left);
-    int b = bestSolution(root->right);
-    return a + b + 1;
+
+    int lh = getLeftHeight(root);
+    int rh = getRightHeight(root);
+
+    if (lh == rh) {
+        return (1 << lh) - 1;
+    }
+
+    return 1 + solution(root->left) + solution(root->right);
 }
