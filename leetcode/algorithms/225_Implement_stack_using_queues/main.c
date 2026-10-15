@@ -1,124 +1,103 @@
+#include <stdbool.h>
 #include <stdlib.h>
-
-typedef struct
-{
-    int *intArray;
-    int topIndex;
-} MyStack;
-
-MyStack *myStackCreate()
-{
-    MyStack *myStack = (MyStack *)malloc(sizeof(MyStack));
-    myStack->intArray = (int *)malloc(sizeof(int) * 100);
-    myStack->topIndex = -1;
-    return myStack;
-}
-
-void myStackPush(MyStack *obj, int x)
-{
-    if (obj->topIndex < 99)
-    {
-        obj->topIndex++;
-        obj->intArray[obj->topIndex] = x;
-    }
-}
-
-int myStackPop(MyStack *obj)
-{
-    if (obj->topIndex < 0)
-    {
-        return -1;
-    }
-    return obj->intArray[obj->topIndex--];
-}
-
-int myStackTop(MyStack *obj)
-{
-    if (obj->topIndex < 0)
-    {
-        return -1;
-    }
-    return obj->intArray[obj->topIndex];
-}
-
-bool myStackEmpty(MyStack *obj)
-{
-    return obj->topIndex < 0;
-}
-
-void myStackFree(MyStack *obj)
-{
-    free(obj->intArray);
-    free(obj);
-}
 
 /**
  * Your MyStack struct will be instantiated and called as such:
  * MyStack* obj = myStackCreate();
  * myStackPush(obj, x);
-
  * int param_2 = myStackPop(obj);
-
  * int param_3 = myStackTop(obj);
-
  * bool param_4 = myStackEmpty(obj);
-
  * myStackFree(obj);
 */
 
-// Best Solution
-int size = 100;
+// Solution
+/**
+ * Complexities:
+ *   - Time Complexity:
+ *     push: O(N)
+ *     pop: O(1)
+ *     top: O(1)
+ *     empty: O(1)
+ *   - Space Complexity: O(N)
+ */
+typedef struct {
+    int* data;
+    int front;
+    int rear;
+    int capacity;
+} Queue;
 
-typedef struct
-{
-    int *arr;
-    int size;
-    int top;
-} BestSolution_MyStack;
-
-BestSolution_MyStack *bestSolution_myStackCreate()
-{
-    MyStack *stack = (MyStack *)malloc(sizeof(MyStack));
-    stack->arr = (int *)malloc(size * sizeof(int));
-    stack->size = size;
-    stack->top = -1;
-    return stack;
+Queue* createQueue(int capacity) {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->data = (int*)malloc(capacity * sizeof(int));
+    q->front = 0;
+    q->rear = 0;
+    q->capacity = capacity;
+    return q;
 }
 
-void bestSolution_myStackPush(MyStack *obj, int x)
-{
-    if (obj->top < obj->size - 1)
-    {
-        obj->top++;
-        obj->arr[obj->top] = x;
+void enqueue(Queue* q, int val) {
+    q->data[q->rear] = val;
+    q->rear = (q->rear + 1) % q->capacity;
+}
+
+int dequeue(Queue* q) {
+    int val = q->data[q->front];
+    q->front = (q->front + 1) % q->capacity;
+    return val;
+}
+
+int peek(Queue* q) {
+    return q->data[q->front];
+}
+
+int size(Queue* q) {
+    return (q->rear - q->front + q->capacity) % q->capacity;
+}
+
+bool isEmpty(Queue* q) {
+    return q->front == q->rear;
+}
+
+void freeQueue(Queue* q) {
+    free(q->data);
+    free(q);
+}
+
+typedef struct {
+    Queue* q;
+} MyStack;
+
+MyStack* myStackCreate() {
+    MyStack* obj = (MyStack*)malloc(sizeof(MyStack));
+    obj->q = createQueue(200); 
+    return obj;
+}
+
+void myStackPush(MyStack* obj, int x) {
+    int sz = size(obj->q);
+    
+    enqueue(obj->q, x);
+    
+    for (int i = 0; i < sz; i++) {
+        enqueue(obj->q, dequeue(obj->q));
     }
 }
 
-int bestSolution_myStackPop(MyStack *obj)
-{
-    if (obj->top == -1)
-    {
-        return -1;
-    }
-    return obj->arr[obj->top--];
+int myStackPop(MyStack* obj) {
+    return dequeue(obj->q);
 }
 
-int bestSolution_myStackTop(MyStack *obj)
-{
-    if (obj->top == -1)
-    {
-        return -1;
-    }
-    return obj->arr[obj->top];
+int myStackTop(MyStack* obj) {
+    return peek(obj->q);
 }
 
-bool bestSolution_myStackEmpty(MyStack *obj)
-{
-    return obj->top == -1;
+bool myStackEmpty(MyStack* obj) {
+    return isEmpty(obj->q);
 }
 
-void bestSolution_myStackFree(MyStack *obj)
-{
-    free(obj->arr);
+void myStackFree(MyStack* obj) {
+    freeQueue(obj->q);
     free(obj);
 }
