@@ -1,42 +1,53 @@
 #include <stdlib.h>
 
-struct TreeNode
-{
+struct TreeNode {
     int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
+    struct TreeNode* left;
+    struct TreeNode* right;
 };
 
-struct TreeNode *invertTree(struct TreeNode *root)
-{
-    if (root)
-    {
-        struct TreeNode *tempNode = root->left;
-        root->left = invertTree(root->right);
-        root->right = invertTree(tempNode);
+/**
+ * Recursiont: DFS
+ * 
+ * Complexities:
+ *   N - The Number of nodes in `root`
+ *   H - THe Height of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+struct TreeNode* invertTree(struct TreeNode* root) {
+    if (!root) {
+        return (void*)0;
     }
+
+    struct TreeNode* temp = root->left;
+    root->left = invertTree(root->right);
+    root->right = invertTree(temp);
+
     return root;
 }
 
-// Best Solution
-struct TreeNode *bestSolution(struct TreeNode *root)
-{
-    // Base case...
-    if (root == NULL)
-    {
-        return root;
+
+// Solution
+/**
+ * Recursiont: DFS
+ * 
+ * Complexities:
+ *   N - The Number of nodes in `root`
+ *   H - THe Height of `root`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(H)
+ */
+struct TreeNode* solution(struct TreeNode* root) {
+    if (root == NULL) {
+        return NULL;
     }
 
-    // Call the function recursively for the left subtree...
-    invertTree(root->left);
+    struct TreeNode* leftCloned = solution(root->left);
+    struct TreeNode* rightCloned = solution(root->right);
 
-    // Call the function recursively for the right subtree...
-    invertTree(root->right);
+    root->left = rightCloned;
+    root->right = leftCloned;
 
-    // swapping process...
-    struct TreeNode *curr = root->left;
-    root->left = root->right;
-    root->right = curr;
-
-    return root; // Return the root...
+    return root;
 }
