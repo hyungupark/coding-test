@@ -1,4 +1,12 @@
 class SummaryRanges {
+  /**
+   * Two Pointers
+   *
+   * Complexities:
+   *   N - Size of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   List<String> summaryRanges(List<int> nums) {
     List<String> stringList = List<String>.empty(growable: true);
 
@@ -14,6 +22,7 @@ class SummaryRanges {
           begin = nums[i];
         }
       }
+
       if (begin < nums.last) {
         stringList.add("$begin->${nums.last}");
       } else {
@@ -24,35 +33,42 @@ class SummaryRanges {
     return stringList;
   }
 
-  // Best Solution
-  List<String> BestSolution(List<int> nums) {
-    final res = <String>[];
+
+  // Solution
+  /**
+   * Two Pointers
+   *
+   * Complexities:
+   *   N - Size of `nums`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  List<String> solution(List<int> nums) {
+    List<String> result = [];
 
     if (nums.isEmpty) {
-      return res;
+      return result;
     }
 
-    var start = nums[0];
+    int i = 0;
+    int n = nums.length;
 
-    for (int i = 0; i < nums.length; i++) {
-      if (i == nums.length - 1) {
-        if (start == nums[i]) {
-          res.add("$start");
-        } else {
-          res.add("$start->${nums[i]}");
-        }
-      } else {
-        if (nums[i + 1] != nums[i] + 1) {
-          if (start == nums[i]) {
-            res.add("$start");
-          } else {
-            res.add("$start->${nums[i]}");
-          }
-          start = nums[i + 1];
-        }
+    while (i < n) {
+      int start = nums[i];
+
+      while (i + 1 < n && nums[i + 1] == nums[i] + 1) {
+        i++;
       }
+
+      if (start == nums[i]) {
+        result.add("$start");
+      } else {
+        result.add("$start->${nums[i]}");
+      }
+
+      i++;
     }
 
-    return res;
+    return result;
   }
 }
