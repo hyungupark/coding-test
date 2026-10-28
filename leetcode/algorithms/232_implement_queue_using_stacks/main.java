@@ -1,13 +1,31 @@
 import java.util.Stack;
 
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
+
+/**
+ * Complexities:
+ *   - Time Complexity:
+ *     push(x): O(1)
+ *     pop(): O(1)
+ *     peek(): O(1)
+ *     empty(): O(1)
+ *   - Space Complexity: O(N)
+ */
 class ImplementQueueUsingStacks {
     private Stack<Integer> inputStack;
     private Stack<Integer> outputStack;
     private int front;
 
     public ImplementQueueUsingStacks() {
-        inputStack = new Stack<Integer>();
-        outputStack = new Stack<Integer>();
+        inputStack = new Stack<>();
+        outputStack = new Stack<>();
         front = 0;
     }
 
@@ -39,38 +57,49 @@ class ImplementQueueUsingStacks {
     }
 }
 
+
+// Solution
 /**
- * Your MyQueue object will be instantiated and called as such:
- * MyQueue obj = new MyQueue();
- * obj.push(x);
- * int param_2 = obj.pop();
- * int param_3 = obj.peek();
- * boolean param_4 = obj.empty();
+ * Complexities:
+ *   - Time Complexity:
+ *     push(x): O(1)
+ *     pop(): O(1)
+ *     peek(): O(1)
+ *     empty(): O(1)
+ *   - Space Complexity: O(N)
  */
+class Solution {
+    private Stack<Integer> inStack;
+    private Stack<Integer> outStack;
 
-
-// Best Solution
-class ImplementQueueUsingStacks_BestSolution {
-    Stack<Integer> input = new Stack<Integer>();
-    Stack<Integer> output = new Stack<Integer>();
-
-    public void push(int x) {
-        input.push(x);
+    public Solution() {
+        inStack = new Stack<>();
+        outStack = new Stack<>();
     }
 
-    public void pop() {
-        peek();
-        output.pop();
+    public void push(int x) {
+        inStack.push(x);
+    }
+
+    public int pop() {
+        shiftStacks();
+        return outStack.pop();
     }
 
     public int peek() {
-        if (output.empty())
-            while (!input.empty())
-                output.push(input.pop());
-        return output.peek();
+        shiftStacks();
+        return outStack.peek();
     }
 
     public boolean empty() {
-        return input.empty() && output.empty();
+        return inStack.isEmpty() && outStack.isEmpty();
+    }
+
+    private void shiftStacks() {
+        if (outStack.isEmpty()) {
+            while (!inStack.isEmpty()) {
+                outStack.push(inStack.pop());
+            }
+        }
     }
 }
