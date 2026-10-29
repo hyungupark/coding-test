@@ -1,3 +1,21 @@
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = MyQueue();
+ * obj.push(x);
+ * int param2 = obj.pop();
+ * int param3 = obj.peek();
+ * bool param4 = obj.empty();
+ */
+
+/**
+ * Complexities:
+ *   - Time Complexity:
+ *     push(x): O(1)
+ *     pop(): O(1)
+ *     peek(): O(1)
+ *     empty(): O(1)
+ *   - Space Complexity: O(N)
+ */
 class MyQueue {
   late final List<int> input;
   late final List<int> output;
@@ -35,32 +53,46 @@ class MyQueue {
   }
 }
 
-/**
- * Your MyQueue object will be instantiated and called as such:
- * MyQueue obj = MyQueue();
- * obj.push(x);
- * int param2 = obj.pop();
- * int param3 = obj.peek();
- * bool param4 = obj.empty();
- */
 
-// Best Solution
-class BestSolution {
-  List input = [];
+// Solution
+/**
+ * Complexities:
+ *   - Time Complexity:
+ *     push(x): O(1)
+ *     pop(): O(1)
+ *     peek(): O(1)
+ *     empty(): O(1)
+ *   - Space Complexity: O(N)
+ */
+class Solution {
+  final List<int> _instack = [];
+  final List<int> _outstack = [];
+
+  Solution();
 
   void push(int x) {
-    input.add(x);
+    _instack.add(x);
   }
 
   int pop() {
-    return input.removeAt(0);
+    _moveIfNeeded();
+    return _outstack.removeLast();
   }
 
   int peek() {
-    return input.first;
+    _moveIfNeeded();
+    return _outstack.last;
   }
 
   bool empty() {
-    return input.isEmpty;
+    return _instack.isEmpty && _outstack.isEmpty;
+  }
+
+  void _moveIfNeeded() {
+    if (_outstack.isEmpty) {
+      while (_instack.isNotEmpty) {
+        _outstack.add(_instack.removeLast());
+      }
+    }
   }
 }
