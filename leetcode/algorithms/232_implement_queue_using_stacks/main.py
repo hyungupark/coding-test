@@ -1,3 +1,19 @@
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+
+"""
+# Complexities:
+#   - Time Complexity:
+#     push(x): O(1)
+#     pop(): O(1)
+#     peek(): O(1)
+#     empty(): O(1)
+#   - Space Complexity: O(N)
+"""
 class MyQueue:
     def __init__(self):
         self.inputStack = []
@@ -21,36 +37,36 @@ class MyQueue:
         return len(self.inputStack) == 0 and len(self.outputStack) == 0
 
 
-# Your MyQueue object will be instantiated and called as such:
-# obj = MyQueue()
-# obj.push(x)
-# param_2 = obj.pop()
-# param_3 = obj.peek()
-# param_4 = obj.empty()
-
-
-# Best Solution
-class BestSolution(object):
+# Solution
+"""
+# Complexities:
+#   - Time Complexity:
+#     push(x): O(1)
+#     pop(): O(1)
+#     peek(): O(1)
+#     empty(): O(1)
+#   - Space Complexity: O(N)
+"""
+class Solution:
     def __init__(self):
-        self.in_stk = []
-        self.out_stk = []
+        self.in_stack = []
+        self.out_stack = []
 
-    # Push element x to the back of queue...
-    def push(self, x):
-        self.in_stk.append(x)
+    def push(self, x: int) -> None:
+        self.in_stack.append(x)
 
-    # Remove the element from the front of the queue and returns it...
-    def pop(self):
-        self.peek()
-        return self.out_stk.pop()
+    def pop(self) -> int:
+        self._move()
+        return self.out_stack.pop()
 
-    # Get the front element...
-    def peek(self):
-        if not self.out_stk:
-            while self.in_stk:
-                self.out_stk.append(self.in_stk.pop())
-        return self.out_stk[-1]
+    def peek(self) -> int:
+        self._move()
+        return self.out_stack[-1]
 
-    # Return whether the queue is empty...
-    def empty(self):
-        return not self.in_stk and not self.out_stk
+    def empty(self) -> bool:
+        return not self.in_stack and not self.out_stack
+
+    def _move(self) -> None:
+        if not self.out_stack:
+            while self.in_stack:
+                self.out_stack.append(self.in_stack.pop())
