@@ -1,24 +1,26 @@
-struct ListNode
-{
+struct ListNode {
     int val;
-    ListNode *next;
+    ListNode* next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
-class PalindromeLinkedList
-{
+class PalindromeLinkedList {
 public:
-    bool isPalindrome(ListNode *head)
-    {
-        struct ListNode *slow = head;
-        struct ListNode *fast = head;
-        struct ListNode *reverse = 0;
-        struct ListNode *temp;
+    /**
+     * Complexities:
+     *   N - The number of nodes in `head`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    bool isPalindrome(ListNode* head) {
+        struct ListNode* slow = head;
+        struct ListNode* fast = head;
+        struct ListNode* reverse = 0;
+        struct ListNode* temp;
 
-        while (fast && fast->next)
-        {
+        while (fast && fast->next) {
             fast = fast->next->next;
             temp = slow->next;
             slow->next = reverse;
@@ -28,10 +30,8 @@ public:
 
         slow = (fast ? slow->next : slow);
 
-        while (slow)
-        {
-            if (slow->val != reverse->val)
-            {
+        while (slow) {
+            if (slow->val != reverse->val) {
                 return false;
             }
             slow = slow->next;
@@ -41,48 +41,57 @@ public:
         return true;
     }
 
-    // Best Solution
-    bool bestSolution(ListNode *head)
-    {
-        ListNode *slow = head;
-        ListNode *fast = head;
-        ListNode *prev;
-        ListNode *temp;
 
-        while (fast && fast->next)
-        {
+    // Solution
+    /**
+     * Complexities:
+     *   N - The number of nodes in `head`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+
+        while (curr != nullptr) {
+            ListNode* nextTemp = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+
+        return prev;
+    }
+
+    bool solution(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return true;
+        }
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast != nullptr && fast->next != nullptr) {
             slow = slow->next;
             fast = fast->next->next;
         }
 
-        prev = slow;
-        slow = slow->next;
-        prev->next = NULL;
+        ListNode* secondHalfHead = reverseList(slow);
 
-        while (slow)
-        {
-            temp = slow->next;
-            slow->next = prev;
-            prev = slow;
-            slow = temp;
+        ListNode* p1 = head;
+        ListNode* p2 = secondHalfHead;
+        bool isPalin = true;
+
+        while (p2 != nullptr) {
+            if (p1->val != p2->val) {
+                isPalin = false;
+                break;
+            }
+            p1 = p1->next;
+            p2 = p2->next;
         }
 
-        fast = head;
-        slow = prev;
+        reverseList(secondHalfHead);
 
-        while (slow)
-        {
-            if (fast->val != slow->val)
-            {
-                return false;
-            }
-            else
-            {
-                fast = fast->next;
-                slow = slow->next;
-            }
-        }
-
-        return true;
+        return isPalin;
     }
 };
