@@ -1,29 +1,35 @@
+#include <algorithm>
 #include <string>
 #include <unordered_map>
+#include <vector>
 using namespace std;
 
-class ValidAnagram
-{
+class ValidAnagram {
 public:
-    bool isAnagram(string s, string t)
-    {
-        if (s.length() != t.length())
-        {
+    /**
+     * Frequency Counting
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    bool isAnagram(string s, string t) {
+        int len = s.length();
+
+        if (len != t.length()) {
             return false;
         }
 
         int alphabetNumArray[26] = {0};
 
-        for (int i = 0; i < s.length(); i++)
-        {
-            alphabetNumArray[s.at(i) - 'a']++;
-            alphabetNumArray[t.at(i) - 'a']--;
+        for (int i = 0; i < len; i++) {
+            alphabetNumArray[s[i] - 'a']++;
+            alphabetNumArray[t[i] - 'a']--;
         }
 
-        for (int i = 0; i < 26; i++)
-        {
-            if (alphabetNumArray[i] > 0)
-            {
+        for (int i = 0; i < 26; i++) {
+            if (alphabetNumArray[i] != 0) {
                 return false;
             }
         }
@@ -31,36 +37,63 @@ public:
         return true;
     }
 
-    // Best Solution 1: Sorting
-    bool bestSolution1(string s, string t)
-    {
-        sort(s.begin(), s.end());
-        sort(t.begin(), t.end());
-        return s == t;
+
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * Frequency Counting
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    bool solution1(string s, string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        vector<int> count(26, 0);
+
+        for (int i = 0; i < s.length(); ++i) {
+            count[s[i] - 'a']++;
+            count[t[i] - 'a']--;
+        }
+
+        for (int val : count) {
+            if (val != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    // Best Solution 2: Hash Table
-    bool bestSolution2(string s, string t)
-    {
+    /**
+     * Solution 2
+     *
+     * unordered_map + Unicode
+     * 
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    bool solution2(string s, string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
         unordered_map<char, int> count;
 
-        // Count the frequency of characters in string `s`
-        for (auto x : s)
-        {
-            count[x]++;
+        for (int i = 0; i < s.length(); ++i) {
+            count[s[i]]++;
+            count[t[i]]--;
         }
 
-        // Decrement the frequency of characters in string `t`
-        for (auto x : t)
-        {
-            count[x]--;
-        }
-
-        // Check if any character has non-zero frequency
-        for (auto x : count)
-        {
-            if (x.second != 0)
-            {
+        for (auto const& [key, val] : count) {
+            if (val != 0) {
                 return false;
             }
         }
@@ -68,32 +101,24 @@ public:
         return true;
     }
 
-    // Best Solution 3: Hash Table (Using Array)
-    bool bestSolution3(string s, string t)
-    {
-        int count[26] = {0};
-
-        // Count the frequency of characters in string `s`
-        for (char x : s)
-        {
-            count[x - 'a']++;
+    /**
+     * Solution 3
+     *
+     * Sorting
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N * logᴺ)
+     *   - Space Complexity: O(N)
+     */
+    bool solution3(string s, string t) {
+        if (s.size() != t.size()) {
+            return false;
         }
+        
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
 
-        // Decrement the frequency of characters in string `t`
-        for (char x : t)
-        {
-            count[x - 'a']--;
-        }
-
-        // Check if any character has non-zero frequency
-        for (int val : count)
-        {
-            if (val != 0)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return s == t;
     }
 };
