@@ -1,65 +1,67 @@
 #include <stdbool.h>
 #include <string.h>
 
-bool isAnagram(char *s, char *t)
-{
-    int sNum = 0;
-    int tNum = 0;
+/**
+ * Frequency Counting
+ * 
+ * Complexities:
+ *   N - The size of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+bool isAnagram(char* s, char* t) {
+    int len = strlen(s);
 
-    int sLength = strlen(s);
-    int tLength = strlen(t);
+    if (len != strlen(t)) {
+        return false;
+    }
 
     int charNumArray[26] = {0};
 
-    if (sLength == tLength)
-    {
-        for (int i = 0; i < sLength; i++)
-        {
-            charNumArray[s[i] - 'a']++;
-            charNumArray[t[i] - 'a']--;
-        }
+    for (int i = 0; i < len; i++) {
+        charNumArray[s[i] - 'a']++;
+        charNumArray[t[i] - 'a']--;
+    }
 
-        for (int i = 0; i < 26; i++)
-        {
-            if (charNumArray[i] != 0)
-            {
-                return false;
-            }
+    for (int i = 0; i < 26; i++) {
+        if (charNumArray[i] != 0) {
+            return false;
         }
     }
 
     return true;
 }
 
-// Best Solution 1
-bool bestSolution1(char *s, char *t)
-{
-    int f[26] = {0};
-    register int i;
-    for (i = 0; s[i] != '\0' && t[i] != '\0'; i++)
-    {
-        f[s[i] - 'a']++;
-        f[t[i] - 'a']--;
+
+// Solution
+/**
+ * Frequency Counting
+ * 
+ * Complexities:
+ *   N - The size of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+bool solution(char* s, char* t) {
+    int len_s = strlen(s);
+    int len_t = strlen(t);
+
+    if (len_s != len_t) {
+        return false;
     }
-    if (s[i] != '\0' || t[i] != '\0')
-        return 0;
-    for (register i = 0; i < 26; i++)
-        if (f[i] != 0)
-            return 0;
-    return 1;
-}
 
-// Best Solution 2
-bool bestSolution2(char *s, char *t)
-{
+    int counts[26] = {0};
 
-    int chars[26] = {0, 0}, index;
-    for (index = 0; s[index]; ++index)
-        chars[s[index] - 'a']++;
-    for (index = 0; t[index]; ++index)
-        chars[t[index] - 'a']--;
-    for (index = 0; index < 26; ++index)
-        if (chars[index])
+    for (int i = 0; i < len_s; i++) {
+        counts[s[i] - 'a']++;
+        counts[t[i] - 'a']--;
+    }
+
+    for (int i = 0; i < 26; i++) {
+        if (counts[i] != 0) {
             return false;
+        }
+    }
+
     return true;
 }
