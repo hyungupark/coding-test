@@ -1,29 +1,32 @@
 /**
+ * Frequency Counting
+ *
+ * Complexities:
+ *   N - The size of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
  * @param {string} s
  * @param {string} t
  * @return {boolean}
  */
 var isAnagram = function (s, t) {
-  let sMap = {};
+  const len = s.length;
 
-  for (const c_ of s) {
-    if (sMap[c_]) {
-      sMap[c_] = sMap[c_] + 1;
-    } else {
-      sMap[c_] = 1;
-    }
+  if (len != t.length) {
+    return false;
   }
 
-  for (const c_ of t) {
-    if (sMap[c_] > 0) {
-      sMap[c_] = sMap[c_] - 1;
-    } else {
-      return false;
-    }
+  const alphabetNumArray = new Array(26).fill(0);
+
+  for (let i = 0; i < len; i++) {
+    alphabetNumArray[s[i].charCodeAt(0) - 97]++;
+    alphabetNumArray[t[i].charCodeAt(0) - 97]--;
   }
 
-  for (const c_ in sMap) {
-    if (sMap[c_] > 0) {
+  for (let i = 0; i < 26; i++) {
+    if (alphabetNumArray[i] != 0) {
       return false;
     }
   }
@@ -32,23 +35,57 @@ var isAnagram = function (s, t) {
 };
 
 
-// Best Solution
-var bestSolution = function (s, t) {
+// Solution
+/**
+ * Solution 1
+ *
+ * Frequency Counting
+ *
+ * Complexities:
+ *   N - The size of `s`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var solution1 = function (s, t) {
   if (s.length !== t.length) {
     return false;
   }
 
-  var freq = new Array(26).fill(0);
-  for (var i = 0; i < s.length; i++) {
-    freq[s.charCodeAt(i) - "a".charCodeAt(0)]++;
-    freq[t.charCodeAt(i) - "a".charCodeAt(0)]--;
+  const charCount = new Array(26).fill(0);
+  const charCodeA = 97;
+
+  for (let i = 0; i < s.length; i++) {
+    charCount[s.charCodeAt(i) - charCodeA]++;
+    charCount[t.charCodeAt(i) - charCodeA]--;
   }
 
-  for (var i = 0; i < freq.length; i++) {
-    if (freq[i] !== 0) {
-      return false;
-    }
+  return charCount.every((count) => count === 0);
+};
+
+/**
+ * Solution 2
+ *
+ * Sorting
+ *
+ * Complexities:
+ *   N - The size of `s`
+ *   - Time Complexity: O(N * logᴺ)
+ *   - Space Complexity: O(N)
+ */
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var solution2 = function (s, t) {
+  if (s.length !== t.length) {
+    return false;
   }
 
-  return true;
+  return s.split("").sort().join("") === t.split("").sort().join("");
 };
