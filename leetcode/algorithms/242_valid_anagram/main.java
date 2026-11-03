@@ -1,28 +1,33 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 class ValidAnagram {
+    /**
+     * Frequency Counting
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
     public boolean isAnagram(String s, String t) {
-        Map<Character, Integer> sMap = new HashMap<Character, Integer>();
+        int len = s.length();
 
-        for (char c_ : s.toCharArray()) {
-            if (sMap.get(c_) == null) {
-                sMap.put(c_, 1);
-            } else {
-                sMap.put(c_, sMap.get(c_) + 1);
-            }
+        if (len != t.length()) {
+            return false;
         }
 
-        for (char c_ : t.toCharArray()) {
-            if (sMap.get(c_) != null && sMap.get(c_) > 0) {
-                sMap.put(c_, sMap.get(c_) - 1);
-            } else {
-                return false;
-            }
+        int[] alphabetNumArray = new int[26];
+        Arrays.fill(alphabetNumArray, 0);
+
+        for (int i = 0; i < len; i++) {
+            alphabetNumArray[s.charAt(i) - 'a']++;
+            alphabetNumArray[t.charAt(i) - 'a']--;
         }
 
-        for (Integer v_ : sMap.values()) {
-            if (v_ > 0) {
+        for (int i = 0; i < 26; i++) {
+            if (alphabetNumArray[i] != 0) {
                 return false;
             }
         }
@@ -30,21 +35,70 @@ class ValidAnagram {
         return true;
     }
 
-    
-    // Best Solution
-    public boolean bestSolution(String s, String t) {
-        int[] alphabet = new int[26];
+
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * Frequency Counting
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    public boolean solution1(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        int[] charCounts = new int[26];
+
         for (int i = 0; i < s.length(); i++) {
-            alphabet[s.charAt(i) - 'a']++;
+            charCounts[s.charAt(i) - 'a']++;
+            charCounts[t.charAt(i) - 'a']--;
         }
-        for (int i = 0; i < t.length(); i++) {
-            alphabet[t.charAt(i) - 'a']--;
-        }
-        for (int i : alphabet) {
-            if (i != 0) {
+
+        for (int count : charCounts) {
+            if (count != 0) {
                 return false;
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Solution 2
+     * 
+     * HashMap + Unicode
+     *
+     * Complexities:
+     *   N - The size of `s`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    public boolean solution2(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        Map<Character, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char charS = s.charAt(i);
+            char charT = t.charAt(i);
+            
+            map.put(charS, map.getOrDefault(charS, 0) + 1);
+            map.put(charT, map.getOrDefault(charT, 0) - 1);
+        }
+
+        for (int count : map.values()) {
+            if (count != 0) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
