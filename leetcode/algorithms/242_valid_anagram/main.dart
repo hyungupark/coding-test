@@ -1,43 +1,96 @@
 class ValidAnagram {
+  /**
+   * Frequency Counting
+   *
+   * Complexities:
+   *   N - The size of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
   bool isAnagram(String s, String t) {
-    if (s.length != t.length) {
+    int len = s.length;
+
+    if (len != t.length) {
       return false;
     }
 
-    for (String c in s.split('')) {
-      t = t.replaceFirst(c, '');
+    List<int> alphabetNumArray = List<int>.filled(26, 0);
+
+    for (int i = 0; i < len; i++) {
+      alphabetNumArray[s.codeUnitAt(i) - 97]++;
+      alphabetNumArray[t.codeUnitAt(i) - 97]--;
     }
 
-    return t.isEmpty;
-  }
-
-  // Best Solution 1
-  bool bestSolution1(String s, String t) {
-    List<String> s1 = s.split('');
-    List<String> s2 = t.split('');
-    s1.sort();
-    s2.sort();
-    bool result = true;
-    if (s1.length != s2.length) {
-      result = false;
-    } else {
-      for (int i = 0; i < s1.length; i++) {
-        if (s1[i] != s2[i]) {
-          result = false;
-          break;
-        }
+    for (int i = 0; i < 26; i++) {
+      if (alphabetNumArray[i] != 0) {
+        return false;
       }
     }
-    return result;
+
+    return true;
   }
 
-  // Best Solution 2
-  bool bestSolution2(String s, String t) {
+
+  // Solution
+  /**
+   * Solution 1
+   * 
+   * Frequency Counting
+   *
+   * Complexities:
+   *   N - The size of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(1)
+   */
+  bool solution1(String s, String t) {
     if (s.length != t.length) {
       return false;
     }
-    var sortedS = (s.split('')..sort()).join('');
-    var sortedT = (t.split('')..sort()).join('');
-    return sortedT == sortedS;
+
+    final List<int> charCounts = List.filled(26, 0);
+    final int asciiA = 'a'.codeUnitAt(0);
+
+    for (int i = 0; i < s.length; i++) {
+      charCounts[s.codeUnitAt(i) - asciiA]++;
+      charCounts[t.codeUnitAt(i) - asciiA]--;
+    }
+
+    for (int count in charCounts) {
+      if (count != 0) return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Solution 2
+   * 
+   * Hash Map
+   * 
+   * Complexities:
+   *   N - The size of `s`
+   *   - Time Complexity: O(N)
+   *   - Space Complexity: O(N)
+   */
+  bool solution2(String s, String t) {
+    if (s.length != t.length) {
+      return false;
+    }
+
+    final Map<String, int> charCounts = {};
+
+    for (int i = 0; i < s.length; i++) {
+      String charS = s[i];
+      String charT = t[i];
+
+      charCounts[charS] = (charCounts[charS] ?? 0) + 1;
+      charCounts[charT] = (charCounts[charT] ?? 0) - 1;
+    }
+
+    for (int count in charCounts.values) {
+      if (count != 0) return false;
+    }
+
+    return true;
   }
 }
