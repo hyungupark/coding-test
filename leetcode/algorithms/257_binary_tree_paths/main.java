@@ -1,25 +1,7 @@
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
 class BinaryTreePaths {
-
     public class TreeNode {
         int val;
         TreeNode left;
@@ -39,8 +21,17 @@ class BinaryTreePaths {
         }
     }
 
+    /**
+     * DFS + Backtracking
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The height of tree in `root`
+     *   - Time Complexity: O(N * H)
+     *   - Space Complexity: O(H)
+     */
     public List<String> binaryTreePaths(TreeNode root) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (root == null) {
             return result;
@@ -71,24 +62,38 @@ class BinaryTreePaths {
     }
 
 
-    // Best Solution
-    public List<String> bestSolution(TreeNode root) {
-        List<String> answer = new ArrayList<String>();
+    // Solution
+    /**
+     * DFS + Backtracking
+     *
+     * Complexities:
+     *   N - The number of nodes in `root`
+     *   H - The height of tree in `root`
+     *   - Time Complexity: O(N * H)
+     *   - Space Complexity: O(H)
+     */
+    public List<String> solution(TreeNode root) {
+        List<String> result = new ArrayList<>();
+
         if (root != null) {
-            searchBT(root, "", answer);
+            dfs(root, "", result);
         }
-        return answer;
+
+        return result;
     }
 
-    private void searchBT(TreeNode root, String path, List<String> answer) {
-        if (root.left == null && root.right == null) {
-            answer.add(path + root.val);
+    private void dfs(TreeNode node, String path, List<String> result) {
+        if (node.left == null && node.right == null) {
+            result.add(path + node.val);
+            return;
         }
-        if (root.left != null) {
-            searchBT(root.left, path + root.val + "->", answer);
+
+        if (node.left != null) {
+            dfs(node.left, path + node.val + "->", result);
         }
-        if (root.right != null) {
-            searchBT(root.right, path + root.val + "->", answer);
+
+        if (node.right != null) {
+            dfs(node.right, path + node.val + "->", result);
         }
     }
 }
