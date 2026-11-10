@@ -5,10 +5,16 @@ import math
 
 
 def isBadVersion(version: int) -> bool:
-    return False
+    return True
 
 
-class Solution:
+class FirstBadVersion:
+    """
+    # Complexities:
+    #   N - `n`
+    #   - Time Complexity: O(logᴺ)
+    #   - Space Complexity: O(1)
+    """
     def firstBadVersion(self, n: int) -> int:
         left = 0
         right = n
@@ -23,14 +29,22 @@ class Solution:
         return left
 
 
-    # Best Solution
-    def bestSolution(self, n):
-        i = 1
-        j = n
-        while i < j:
-            pivot = (i + j) // 2
-            if isBadVersion(pivot):
-                j = pivot  # keep track of the leftmost bad version
+    # Solution
+    """
+    # Complexities:
+    #   N - `n`
+    #   - Time Complexity: O(logᴺ)
+    #   - Space Complexity: O(1)
+    """
+    def solution(self, n: int) -> int:
+        left, right = 1, n
+
+        while left < right:
+            mid = left + (right - left) // 2
+
+            if isBadVersion(mid):
+                right = mid
             else:
-                i = pivot + 1  # the one after the rightmost good version
-        return i
+                left = mid + 1
+
+        return left
