@@ -1,11 +1,19 @@
+#include <algorithm> // swap, stable_partition
 #include <vector>
 using namespace std;
 
 class MoveZeroes {
 public:
-    void moveZeroes(vector<int> &nums) {
+    /**
+     * Complexities:
+     *   N - The size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(N)
+     */
+    void moveZeroes(vector<int>& nums) {
         int newNums[nums.size()];
         int count = 0;
+
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i]) {
                 newNums[count++] = nums[i];
@@ -21,31 +29,44 @@ public:
         }
     }
 
-    // Best Solution 1
-    void bestSolution1(vector<int> &nums) {
-        int j = 0;
 
-        // move all the non-zero elements advance
-        for (int i = 0; i < nums.size(); i++) {
+    // Solution
+    /**
+     * Solution 1
+     * 
+     * std::swap
+     *
+     * Complexities:
+     *   N - The size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    void solution1(vector<int>& nums) {
+        int lastNonZeroFoundAt = 0;
+
+        for (int i = 0; i < nums.size(); ++i) {
             if (nums[i] != 0) {
-                nums[j++] = nums[i];
+                if (i != lastNonZeroFoundAt) {
+                    swap(nums[lastNonZeroFoundAt], nums[i]);
+                }
+                lastNonZeroFoundAt++;
             }
-        }
-
-        for (; j < nums.size(); j++) {
-            nums[j] = 0;
         }
     }
 
-    // Best Solution 2
-    void bestSolution2(vector<int> &nums) {
-        int left = 0;
-
-        for (int right = 0; right < nums.size(); right++) {
-            if (nums[right] != 0) {
-                swap(nums[right], nums[left]);
-                left++;
-            }
-        }
+    /**
+     * Solution 2
+     * 
+     * std::stable_partition
+     *
+     * Complexities:
+     *   N - The size of `nums`
+     *   - Time Complexity: O(N)
+     *   - Space Complexity: O(1)
+     */
+    void solution2(vector<int>& nums) {
+        stable_partition(nums.begin(), nums.end(), [](int n) {
+            return n != 0;
+        });
     }
 };
