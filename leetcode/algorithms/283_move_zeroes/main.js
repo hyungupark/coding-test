@@ -1,4 +1,10 @@
 /**
+ * Complexities:
+ *   N - The size of `nums`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(N)
+ */
+/**
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
@@ -16,16 +22,58 @@ var moveZeroes = function (nums) {
 };
 
 
-// Best Solution
-var bestSolution = function (nums) {
-  //two pointers
-  var pos = 0;
-  for (var i = 0; i < nums.length; i++) {
+// Solution
+/**
+ * Solution 1
+ *
+ * Two Pointers Swap
+ *
+ * Complexities:
+ *   N - The size of `nums`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var solution1 = function (nums) {
+  let lastNonZeroIndex = 0;
+
+  for (let i = 0; i < nums.length; i++) {
     if (nums[i] !== 0) {
-      nums[pos++] = nums[i];
+      nums[lastNonZeroIndex] = nums[i];
+      lastNonZeroIndex++;
     }
   }
-  for (i = pos; i < nums.length; i++) {
+
+  for (let i = lastNonZeroIndex; i < nums.length; i++) {
     nums[i] = 0;
+  }
+};
+
+/**
+ * Solution 2
+ *
+ * Swap
+ *
+ * Complexities:
+ *   N - The size of `nums`
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var solution2 = function (nums) {
+  let lastNonZeroIndex = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== 0) {
+      [nums[lastNonZeroIndex], nums[i]] = [nums[i], nums[lastNonZeroIndex]];
+
+      lastNonZeroIndex++;
+    }
   }
 };
