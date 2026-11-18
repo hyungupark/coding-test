@@ -1,4 +1,9 @@
 /**
+ * Complexities:
+ *   - Time Complexity: O(1)
+ *   - Space Complexity: O(1)
+ */
+/**
  * @param {number} n
  * @return {boolean}
  */
@@ -10,23 +15,33 @@ var canWinNim = function (n) {
 };
 
 
-// Best Solution
-var bestSolution1 = function (n) {
-  if (memo[n] === undefined) {
-    memo[n] = !bestSolution1(n - 3) || !bestSolution1(n - 2) || !bestSolution1(n - 1);
-  }
-  return memo[n];
+// Solution
+/**
+ * Solution 1
+ *
+ * Complexities:
+ *   - Time Complexity: O(1)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var solution1 = function (n) {
+  return n % 4 !== 0;
 };
 
-var bestSolution2 = function (n) {
-  n %= 4;
-  if (memo[n] === undefined) {
-    memo[n] = !bestSolution2(n - 3) || !bestSolution2(n - 2) || !bestSolution2(n - 1);
-  }
-  return memo[n];
-};
-
-var bestSolution3 = function (n) {
-  if (n % 4 == 0) return false;
-  else return true;
+/**
+ * Solution 2
+ *
+ * Complexities:
+ *   - Time Complexity: O(1)
+ *   - Space Complexity: O(1)
+ */
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var solution2 = function (n) {
+  return (n & 3) !== 0;
 };
