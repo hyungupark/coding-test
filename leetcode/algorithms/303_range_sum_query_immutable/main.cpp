@@ -1,6 +1,17 @@
 #include <vector>
 using namespace std;
 
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * int param_1 = obj->sumRange(left,right);
+ */
+
+/**
+ * Complexities:
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
 class NumArray {
 public:
     vector<int>& numArray;
@@ -16,39 +27,45 @@ public:
     }
 };
 
+
+// Solution
 /**
- * Your NumArray object will be instantiated and called as such:
- * NumArray* obj = new NumArray(nums);
- * int param_1 = obj->sumRange(left,right);
+ * Solution 1
+ * 
+ * Complexities:
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
  */
+class Solution1 {
+    vector<int> prefix;
 
-
-// Best Solution
-class BestSolution {
 public:
-    vector<int>& numArray;
-
-    BestSolution(vector<int>& nums) : numArray(nums) {}
-
-    int sumRange(int left, int right) {
-        int sum = 0;
-        for (int i = left; i <= right; i++) {
-            sum += numArray[i];
-        }
-        return sum;
-    }
-
-    // Best Solution
-    vector<int>& preSum; // `preSum` will reference to `nums` array, no copy at all!
-
-    NumArray(vector<int>& nums) : preSum(nums) {
-        for (int i = 1; i < preSum.size(); ++i)
-            preSum[i] += preSum[i - 1];
+    Solution1(vector<int>& nums) : prefix(nums.size() + 1, 0) {
+        for (size_t i = 0; i < nums.size(); ++i)
+            prefix[i + 1] = prefix[i] + nums[i];
     }
 
     int sumRange(int left, int right) {
-        if (left == 0)
-            return preSum[right];
-        return preSum[right] - preSum[left - 1];
+        return prefix[right + 1] - prefix[left];
+    }
+};
+
+/**
+ * Solution 2
+ * 
+ * Complexities:
+ *   - Time Complexity: O(N)
+ *   - Space Complexity: O(1)
+ */
+class Solution2 {
+    vector<int> prefix;
+
+public:
+    Solution2(vector<int>& nums) : prefix(nums.size() + 1, 0) {
+        partial_sum(nums.begin(), nums.end(), prefix.begin() + 1);
+    }
+
+    int sumRange(int left, int right) const {
+        return prefix[right + 1] - prefix[left];
     }
 };
